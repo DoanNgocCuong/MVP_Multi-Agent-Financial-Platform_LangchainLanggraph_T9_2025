@@ -1,0 +1,25 @@
+# FastAPI and Web Framework
+fastapi==0.111.0
+uvicorn[standard]==0.30.0
+pydantic==2.8.2
+
+# LangChain Ecosystem - Latest Stable
+langgraph>=0.2.20,<0.3
+langchain-core>=0.3.0,<0.4
+langchain>=0.3.0,<0.4
+langchain-community>=0.3.0,<0.4
+
+# Alternative: 1.0 Alpha versions (cutting edge)
+# langgraph==1.0.0a3
+# langchain-core>=0.3.0
+# langchain>=1.0.0a1
+
+# Logging and Monitoring
+structlog==24.1.0
+opentelemetry-sdk==1.26.0
+opentelemetry-exporter-otlp==1.26.0
+
+# Additional dependencies that might be needed
+langsmith>=0.1.0
+langchain-openai>=0.2.0  # if using OpenAI
+langchain-anthropic>=0.2.0  # if using Anthropic
