@@ -194,7 +194,7 @@ async def list_tools():
     tools = tool_hub.get_available_tools()
     
     return {
-        "tools": [tool.dict() for tool in tools],
+        "tools": [tool.model_dump() for tool in tools],
         "count": len(tools),
     }
 
@@ -214,7 +214,7 @@ async def execute_tool(
             context=request.get("context"),
         )
         
-        return result.dict()
+        return result.model_dump()
         
     except Exception as e:
         logger.error(f"Tool execution failed: {str(e)}")

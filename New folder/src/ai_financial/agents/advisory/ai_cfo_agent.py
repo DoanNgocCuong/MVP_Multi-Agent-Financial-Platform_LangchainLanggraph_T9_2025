@@ -663,6 +663,25 @@ This analysis is tailored for the {self.industry} industry, incorporating releva
         
         return "\n".join(formatted)
     
+    async def _process_request(self, state: AgentState) -> AgentState:
+        """Process a request using the AI CFO workflow.
+        
+        This method serves as the main entry point for the AI CFO agent's processing pipeline.
+        It delegates to the specific workflow steps defined in the graph.
+        
+        Args:
+            state: Current agent state
+            
+        Returns:
+            Updated agent state
+        """
+        # The actual processing is handled by the graph workflow
+        # This method is required by the BaseAgent abstract class
+        # The graph will route through the appropriate workflow steps
+        
+        # For direct processing without the full graph, we can call analyze_request
+        return await self._analyze_request(state)
+    
     def get_capabilities(self) -> List[str]:
         """Get AI CFO agent capabilities."""
         return [

@@ -267,7 +267,7 @@ class MCPServer:
             try:
                 if request.method == "tools/list":
                     # List available tools
-                    tools = [def_.dict() for def_ in self.get_tool_definitions()]
+                    tools = [def_.model_dump() for def_ in self.get_tool_definitions()]
                     return MCPResponse(
                         id=request.id,
                         result={"tools": tools}
@@ -291,7 +291,7 @@ class MCPServer:
                     
                     return MCPResponse(
                         id=request.id,
-                        result=result.dict()
+                        result=result.model_dump()
                     )
                 
                 elif request.method == "tools/get":
@@ -312,7 +312,7 @@ class MCPServer:
                     if definition:
                         return MCPResponse(
                             id=request.id,
-                            result=definition.dict()
+                            result=definition.model_dump()
                         )
                     else:
                         return MCPResponse(

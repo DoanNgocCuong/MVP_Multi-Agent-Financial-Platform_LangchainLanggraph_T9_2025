@@ -29,10 +29,7 @@ LANGFUSE_PUBLIC_KEY=your_langfuse_public_key
 Các phần env này có cần dựng DB trước không, hay DB được tự động dựng 
 ```
 
-
 ---
-
-
 
 I'll help you understand how to run the system and whether you need to set up the database manually. Let me examine the project structure and configuration files to provide you with accurate instructions.
 

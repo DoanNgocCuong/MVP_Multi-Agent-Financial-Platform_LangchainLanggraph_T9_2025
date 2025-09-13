@@ -7,10 +7,15 @@ from typing import Any, Dict
 import structlog
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
-from opentelemetry.instrumentation.logging import LoggingInstrumentor
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
+try:
+    from opentelemetry.instrumentation.logging import LoggingInstrumentor
+    LOGGING_INSTRUMENTATION_AVAILABLE = True
+except ImportError:
+    LOGGING_INSTRUMENTATION_AVAILABLE = False
 
 from ai_financial.core.config import settings
 
@@ -74,8 +79,13 @@ def setup_tracing() -> None:
         span_processor = BatchSpanProcessor(otlp_exporter)
         tracer_provider.add_span_processor(span_processor)
     
-    # Instrument logging
-    LoggingInstrumentor().instrument(set_logging_format=True)
+    # Instrument logging if available
+    if LOGGING_INSTRUMENTATION_AVAILABLE:
+        LoggingInstrumentor().instrument(set_logging_format=True)
+    else:
+        # Log a warning if logging instrumentation is not available
+        logger = get_logger(__name__)
+        logger.warning("OpenTelemetry logging instrumentation not available. Install opentelemetry-instrumentation-logging for full logging integration.")
 
 
 def _parse_otlp_headers(headers_str: str) -> Dict[str, str]:
