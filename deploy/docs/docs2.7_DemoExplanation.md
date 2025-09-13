@@ -4,8 +4,8 @@
 
 Tài liệu này giải thích chi tiết kết quả demo chạy thành công của AI Financial Multi-Agent System được ghi lại trong `docs2.5_demoAIAgent.md`.
 
-**Ngày tạo**: 13/09/2025  
-**Demo Version**: 0.1.0  
+**Ngày tạo**: 13/09/2025
+**Demo Version**: 0.1.0
 **Environment**: Windows 10, Python 3.12, Virtual Environment
 
 ---
@@ -13,11 +13,13 @@ Tài liệu này giải thích chi tiết kết quả demo chạy thành công c
 ## 🚀 Khởi động Hệ thống
 
 ### **Command Execution:**
+
 ```bash
 python run_demo.py
 ```
 
 ### **System Initialization:**
+
 ```
 🏦 AI Financial Multi-Agent System
 ==================================================
@@ -29,6 +31,7 @@ WARNING: Using auto-generated SECRET_KEY for development. Set SECRET_KEY environ
 ```
 
 **Giải thích:**
+
 - ✅ Hệ thống khởi động thành công
 - ⚠️ **SECRET_KEY**: Tự động generate cho development (bình thường)
 - ⚠️ **OpenAI API**: Chưa cấu hình → chạy ở **demo mode** với mock responses
@@ -39,39 +42,47 @@ WARNING: Using auto-generated SECRET_KEY for development. Set SECRET_KEY environ
 ## 🔧 System Components Initialization
 
 ### **1. MCP (Model Context Protocol) Server**
+
 ```json
 {"server_id": "default", "name": "Default MCP Server", "host": "localhost", "port": 8001, "event": "MCP Server initialized", "timestamp": "2025-09-13T13:31:25.929592Z", "level": "info"}
 ```
 
 **Giải thích:**
+
 - ✅ MCP Server khởi tạo thành công trên port 8001
 - 🔧 Sử dụng để quản lý và giao tiếp với các tools
 
 ### **2. Tool Hub**
+
 ```json
 {"default_server_host": "localhost", "default_server_port": 8001, "event": "Tool Hub initialized", "timestamp": "2025-09-13T13:31:25.930591Z", "level": "info"}
 ```
 
 **Giải thích:**
+
 - ✅ Tool Hub kết nối với MCP Server thành công
 - 🔧 Quản lý tất cả financial tools
 
 ### **3. Workflow Engine & Context Manager**
+
 ```json
 {"event": "Workflow Engine initialized", "timestamp": "2025-09-13T13:31:25.933601Z", "level": "info"}
 {"event": "Context Manager initialized", "timestamp": "2025-09-13T13:31:25.934601Z", "level": "info"}
 ```
 
 **Giải thích:**
+
 - ✅ Workflow Engine: Xử lý multi-step workflows
 - ✅ Context Manager: Quản lý context và state
 
 ### **4. Agent Orchestrator**
+
 ```json
 {"max_concurrent_agents": 10, "event": "Agent Orchestrator initialized", "timestamp": "2025-09-13T13:31:25.934601Z", "level": "info"}
 ```
 
 **Giải thích:**
+
 - ✅ Orchestrator khởi tạo với khả năng chạy tối đa 10 agents đồng thời
 
 ---
@@ -79,12 +90,14 @@ WARNING: Using auto-generated SECRET_KEY for development. Set SECRET_KEY environ
 ## ⚠️ Pydantic Warnings (Non-Critical)
 
 ### **Warning Messages:**
+
 ```
 UserWarning: Valid config keys have changed in V2:
 * 'schema_extra' has been renamed to 'json_schema_extra'
 ```
 
 **Giải thích:**
+
 - ⚠️ **Không nghiêm trọng**: Chỉ là deprecation warnings từ Pydantic V2
 - 🔧 **Nguyên nhân**: Code vẫn sử dụng `schema_extra` thay vì `json_schema_extra`
 - ✅ **Tác động**: Không ảnh hưởng chức năng, chỉ gây warning
@@ -95,6 +108,7 @@ UserWarning: Valid config keys have changed in V2:
 ## 🤖 Agent Registration
 
 ### **AI CFO Agent Setup:**
+
 ```json
 {"agent_id": "ai_cfo_agent", "event": "OpenAI API key not configured, using mock LLM for development", "timestamp": "2025-09-13T13:31:26.016076Z", "level": "warning"}
 {"agent_id": "ai_cfo_agent", "name": "AI CFO", "model": "gpt-4-turbo-preview", "event": "Agent initialized", "timestamp": "2025-09-13T13:31:26.031121Z", "level": "info"}
@@ -103,6 +117,7 @@ UserWarning: Valid config keys have changed in V2:
 ```
 
 **Giải thích:**
+
 - ✅ **Agent ID**: `ai_cfo_agent` - AI CFO Agent
 - ⚠️ **Demo Mode**: Sử dụng mock LLM do chưa có OpenAI API key
 - 🏥 **Industry**: Healthcare - chuyên về phân tích tài chính ngành y tế
@@ -114,21 +129,25 @@ UserWarning: Valid config keys have changed in V2:
 ## 🛠️ Financial Tools Registration
 
 ### **1. Financial Ratio Calculator**
+
 ```json
 {"tool_name": "financial_ratio_calculator", "category": "financial_analysis", "version": "1.0.0", "event": "Tool initialized", "timestamp": "2025-09-13T13:31:26.033151Z", "level": "info"}
 ```
 
 ### **2. Cash Flow Analyzer**
+
 ```json
 {"tool_name": "cash_flow_analyzer", "category": "financial_analysis", "version": "1.0.0", "event": "Tool initialized", "timestamp": "2025-09-13T13:31:26.034144Z", "level": "info"}
 ```
 
 ### **3. Profitability Analyzer**
+
 ```json
 {"tool_name": "profitability_analyzer", "category": "financial_analysis", "version": "1.0.0", "event": "Tool initialized", "timestamp": "2025-09-13T13:31:26.035120Z", "level": "info"}
 ```
 
 **Giải thích:**
+
 - ✅ **3 Tools** được đăng ký thành công
 - 📊 **Category**: Tất cả thuộc `financial_analysis`
 - 🔧 **Version**: 1.0.0 - phiên bản stable
@@ -139,16 +158,19 @@ UserWarning: Valid config keys have changed in V2:
 ## ⚡ System Startup
 
 ### **MCP Server Start:**
+
 ```json
 {"server_id": "default", "host": "localhost", "port": 8001, "tools_count": 3, "event": "MCP Server started", "timestamp": "2025-09-13T13:31:26.037150Z", "level": "info"}
 ```
 
 ### **Orchestrator Start:**
+
 ```json
 {"registered_agents": 1, "event": "Agent Orchestrator started", "timestamp": "2025-09-13T13:31:26.037150Z", "level": "info"}
 ```
 
 **Giải thích:**
+
 - ✅ **MCP Server**: Chạy trên localhost:8001 với 3 tools
 - ✅ **Orchestrator**: 1 agent đã được đăng ký và sẵn sàng
 - 🚀 **System Status**: ✅ READY!
@@ -158,6 +180,7 @@ UserWarning: Valid config keys have changed in V2:
 ## 📊 System Status Check
 
 ### **Agent Orchestrator Status:**
+
 ```
 ┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
 ┃ Property          ┃ Value        ┃
@@ -170,12 +193,14 @@ UserWarning: Valid config keys have changed in V2:
 ```
 
 **Giải thích:**
+
 - ✅ **Running**: True - Hệ thống đang chạy
 - 👥 **Registered Agents**: 1 agent (AI CFO)
 - 🔄 **Active Workflows**: 0 - Chưa có workflow nào đang chạy
 - 📝 **Agent List**: `ai_cfo_agent` - AI CFO Agent
 
 ### **Tool Hub Status:**
+
 ```
 ┏━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
 ┃ Property    ┃ Value              ┃
@@ -187,6 +212,7 @@ UserWarning: Valid config keys have changed in V2:
 ```
 
 **Giải thích:**
+
 - 🛠️ **Total Tools**: 3 financial analysis tools
 - 🖥️ **Servers**: 1 MCP Server
 - 📊 **Categories**: Tất cả tools thuộc `financial_analysis`
@@ -198,6 +224,7 @@ UserWarning: Valid config keys have changed in V2:
 ### **1. 📊 Dữ liệu Test được sử dụng**
 
 #### **Demo 1: Financial Ratio Calculator - Test Data**
+
 ```python
 # Dữ liệu test được sử dụng trong demo
 test_data = {
@@ -208,6 +235,7 @@ test_data = {
 ```
 
 **Giải thích dữ liệu:**
+
 - 💰 **Current Assets ($150,000)**: Tài sản ngắn hạn bao gồm:
   - Tiền mặt và tương đương tiền
   - Các khoản phải thu
@@ -220,6 +248,7 @@ test_data = {
   - Chi phí phải trả
 
 #### **Demo 2: Cash Flow Analyzer - Test Data**
+
 ```python
 # Dữ liệu dòng tiền test (6 kỳ)
 cash_flow_data = [
@@ -233,6 +262,7 @@ cash_flow_data = [
 ```
 
 **Giải thích dữ liệu:**
+
 - 📅 **6 kỳ dữ liệu**: Thường là 6 tháng hoặc 6 quý
 - 📈 **Xu hướng tăng**: Từ $25,000 → $33,000
 - 💰 **Tổng dòng tiền**: $188,000 trong 6 kỳ
@@ -245,23 +275,26 @@ cash_flow_data = [
 ### **Demo 1: Financial Ratio Calculation**
 
 #### **🔍 Luồng xử lý (Execution Flow):**
+
 ```
 1. Input Validation → 2. Ratio Calculation → 3. Interpretation → 4. Result Output
 ```
 
 **Chi tiết luồng:**
+
 1. **📥 Input Validation**: Kiểm tra dữ liệu đầu vào
+
    - Current Assets > 0
    - Current Liabilities > 0
    - Data types hợp lệ
-
 2. **🧮 Ratio Calculation**: Tính toán Current Ratio
+
    ```
    Current Ratio = Current Assets / Current Liabilities
    Current Ratio = $150,000 / $75,000 = 2.00
    ```
-
 3. **📊 Interpretation Logic**: Phân loại kết quả
+
    ```python
    if current_ratio >= 2.0:
        interpretation = "Strong liquidity position"
@@ -272,10 +305,10 @@ cash_flow_data = [
    else:
        interpretation = "Weak liquidity position"
    ```
-
 4. **📤 Result Output**: Trả về kết quả có cấu trúc
 
 #### **📊 Kết quả tài chính:**
+
 ```
 ╭───────────────────────────── ✅ Ratio Analysis Result ─────────────────────────────╮
 │ Current Ratio: 2.00                                                                │
@@ -287,6 +320,7 @@ cash_flow_data = [
 ```
 
 **Phân tích tài chính:**
+
 - ✅ **Current Ratio = 2.00**: Công ty có khả năng thanh toán nợ ngắn hạn gấp 2 lần
 - 💪 **Strong Liquidity**: Vị thế thanh khoản mạnh, ít rủi ro thanh khoản
 - 📈 **Benchmark**: Tỷ lệ > 2.0 được coi là an toàn trong ngành
@@ -295,35 +329,38 @@ cash_flow_data = [
 ### **Demo 2: Cash Flow Analysis**
 
 #### **🔍 Luồng xử lý (Execution Flow):**
+
 ```
 1. Data Collection → 2. Trend Analysis → 3. Volatility Calculation → 4. Growth Analysis → 5. Result Summary
 ```
 
 **Chi tiết luồng:**
+
 1. **📊 Data Collection**: Thu thập 6 kỳ dữ liệu dòng tiền
 2. **📈 Trend Analysis**: Phân tích xu hướng tăng/giảm
+
    ```python
    # Tính toán % thay đổi từng kỳ
    changes = [12.0%, 14.3%, 9.4%, -14.3%, 10.0%]
    average_change = sum(changes) / len(changes) = 10.6%
    ```
-
 3. **📉 Volatility Calculation**: Tính độ biến động
+
    ```python
    # Standard deviation của dòng tiền
    volatility = calculate_standard_deviation(cash_flows) = Low
    ```
-
 4. **📊 Growth Analysis**: Phân tích tăng trưởng
+
    ```python
    positive_periods = 6  # Tất cả 6 kỳ đều dương
    total_periods = 6
    positive_ratio = 100%
    ```
-
 5. **📋 Result Summary**: Tổng hợp kết quả
 
 #### **📈 Kết quả tài chính:**
+
 ```
 ╭─────────────────────────── 📈 Cash Flow Analysis Result ───────────────────────────╮
 │ Cash Flow Trend: Strong Positive                                                   │
@@ -335,6 +372,7 @@ cash_flow_data = [
 ```
 
 **Phân tích tài chính:**
+
 - 📈 **Strong Positive Trend**: Xu hướng dòng tiền tích cực mạnh
 - 📊 **10.6% Growth Rate**: Tăng trưởng dòng tiền trung bình 10.6% per period
 - 📉 **Low Volatility**: Độ biến động thấp = Dòng tiền ổn định, có thể dự đoán
@@ -342,6 +380,7 @@ cash_flow_data = [
 - ✅ **100% Positive**: Tất cả kỳ đều có dòng tiền dương = Không có cash burn
 
 **Ý nghĩa kinh doanh:**
+
 - 🏢 **Operational Excellence**: Hoạt động kinh doanh hiệu quả
 - 💪 **Financial Stability**: Tình hình tài chính ổn định
 - 📈 **Growth Potential**: Có tiềm năng tăng trưởng
@@ -354,6 +393,7 @@ cash_flow_data = [
 ### **2. 🔍 Luồng xử lý AI CFO Agent**
 
 #### **Financial Health Analysis Request:**
+
 ```json
 {"agent_id": "ai_cfo_agent", "request_length": 115, "event": "Request analyzed", "timestamp": "2025-09-13T13:31:26.078458Z", "level": "info"}
 {"agent_id": "ai_cfo_agent", "company_id": "default", "data_points": 5, "event": "Financial data gathered", "timestamp": "2025-09-13T13:31:26.079993Z", "level": "info"}
@@ -365,6 +405,7 @@ cash_flow_data = [
 ```
 
 #### **📊 Dữ liệu Test được sử dụng:**
+
 ```python
 # 5 data points tài chính được thu thập
 financial_data_points = {
@@ -402,6 +443,7 @@ financial_data_points = {
 #### **🔍 Luồng xử lý chi tiết:**
 
 **Step 1: Request Analysis (115 ký tự)**
+
 ```python
 # Input: "Analyze our company's financial health and provide strategic recommendations"
 request_analysis = {
@@ -413,6 +455,7 @@ request_analysis = {
 ```
 
 **Step 2: Data Gathering (5 data points)**
+
 ```python
 data_collection_process = [
     "Balance Sheet Data",      # Tài sản, nợ, vốn chủ sở hữu
@@ -426,6 +469,7 @@ data_collection_process = [
 **Step 3: 5 Loại Phân tích Tài chính**
 
 1. **💧 Liquidity Analysis (Phân tích Thanh khoản)**
+
    ```python
    liquidity_analysis = {
        "current_ratio": 2.00,     # > 2.0 = Strong
@@ -434,8 +478,8 @@ data_collection_process = [
        "interpretation": "Strong liquidity position"
    }
    ```
-
 2. **💰 Profitability Analysis (Phân tích Lợi nhuận)**
+
    ```python
    profitability_analysis = {
        "gross_margin": 35%,       # Healthcare avg: 30%
@@ -445,8 +489,8 @@ data_collection_process = [
        "interpretation": "Above industry average profitability"
    }
    ```
-
 3. **⚡ Efficiency Analysis (Phân tích Hiệu quả)**
+
    ```python
    efficiency_analysis = {
        "inventory_turnover": 6.5,    # Healthcare avg: 5.0
@@ -455,8 +499,8 @@ data_collection_process = [
        "interpretation": "High operational efficiency"
    }
    ```
-
 4. **⚖️ Leverage Analysis (Phân tích Đòn bẩy)**
+
    ```python
    leverage_analysis = {
        "debt_to_equity": 0.4,        # < 0.5 = Conservative
@@ -465,8 +509,8 @@ data_collection_process = [
        "interpretation": "Conservative debt management"
    }
    ```
-
 5. **🏥 Industry Comparison (So sánh Ngành)**
+
    ```python
    industry_comparison = {
        "vs_healthcare_avg": {
@@ -479,6 +523,7 @@ data_collection_process = [
    ```
 
 **Step 4: Risk Assessment (5 Categories)**
+
 ```python
 risk_categories = {
     "liquidity_risk": "Low",           # Current ratio > 2.0
@@ -490,6 +535,7 @@ risk_categories = {
 ```
 
 **Step 5: Insights & Recommendations Generation**
+
 ```python
 # Trong demo mode, length = 0 do chưa có OpenAI API
 # Trong production mode sẽ có:
@@ -509,6 +555,7 @@ recommendations = [
 ```
 
 #### **📊 Kết quả tài chính tổng hợp:**
+
 ```python
 cfo_analysis_result = {
     "overall_score": "Strong",
@@ -531,17 +578,20 @@ cfo_analysis_result = {
 ```
 
 ### **⚠️ Error Encountered:**
+
 ```json
 {"error": "'coroutine' object has no attribute 'get'", "session_id": "0d683ddd-5c9f-4265-8978-2d74c1473321", "event": "Request routing failed", "timestamp": "2025-09-13T13:31:26.091989Z", "level": "error"}
 ```
 
 **Giải thích:**
+
 - ❌ **Error**: `'coroutine' object has no attribute 'get'`
 - 🔧 **Nguyên nhân**: Async function không được await đúng cách
 - ⚠️ **Impact**: Không ảnh hưởng core functionality, chỉ routing response
 - 📝 **Status**: Đã được ghi lại để fix trong tương lai
 
 ### **Demo Mode Response:**
+
 ```
 ╭────────────────────────── 🤖 AI CFO Response (Demo Mode) ──────────────────────────╮
 │ Demo Mode - OpenAI API not configured                                              │
@@ -558,6 +608,7 @@ cfo_analysis_result = {
 ```
 
 **Giải thích:**
+
 - 🔧 **Demo Mode**: Hiển thị mock response do chưa có OpenAI API
 - 📋 **Capabilities**: Liệt kê các khả năng của AI CFO Agent
 - ❌ **Error Display**: Hiển thị lỗi routing để debug
@@ -569,6 +620,7 @@ cfo_analysis_result = {
 ### **3. 🔍 Luồng xử lý Advisory Workflow**
 
 #### **📊 Dữ liệu Test được sử dụng:**
+
 ```python
 # Dữ liệu input cho Advisory Workflow
 advisory_workflow_data = {
@@ -606,6 +658,7 @@ advisory_workflow_data = {
 #### **🔄 Workflow Steps Chi tiết:**
 
 **Step 1: 📊 Data Synchronization**
+
 ```python
 data_sync_process = {
     "sources": [
@@ -632,6 +685,7 @@ data_sync_process = {
 ```
 
 **Step 2: 🔍 Financial Analysis**
+
 ```python
 financial_analysis = {
     "ratio_analysis": {
@@ -672,6 +726,7 @@ financial_analysis = {
 ```
 
 **Step 3: 📈 Forecasting**
+
 ```python
 forecasting_models = {
     "cash_flow_forecast": {
@@ -716,6 +771,7 @@ forecasting_models = {
 ```
 
 **Step 4: ⚠️ Risk Assessment**
+
 ```python
 risk_assessment = {
     "financial_risks": {
@@ -753,6 +809,7 @@ risk_assessment = {
 ```
 
 **Step 5: 📋 Executive Reporting**
+
 ```python
 executive_report = {
     "executive_summary": {
@@ -783,6 +840,7 @@ executive_report = {
 ```
 
 #### **📊 Kết quả Workflow:**
+
 ```
 ╭────────────────────────── ✅ Advisory Workflow Complete ───────────────────────────╮
 │ Workflow completed successfully!                                                   │
@@ -803,18 +861,21 @@ executive_report = {
 #### **💼 Ý nghĩa Kinh doanh:**
 
 **📈 Strategic Insights:**
+
 - **Financial Position**: Strong với current ratio 2.0 và net margin 12%
 - **Growth Potential**: 12% YoY growth rate, sẵn sàng cho expansion
 - **Risk Management**: Conservative debt structure, low liquidity risk
 - **Competitive Advantage**: Above-industry performance metrics
 
 **🎯 Business Value:**
+
 - **Decision Support**: Data-driven insights cho strategic decisions
 - **Risk Mitigation**: Proactive risk identification và mitigation
 - **Performance Optimization**: Continuous monitoring và improvement
 - **Stakeholder Communication**: Executive-ready reports và dashboards
 
 **📊 Operational Impact:**
+
 - **Cash Flow Management**: 13-week forecast cho better cash planning
 - **Budget Planning**: 12-month P&L projections cho annual planning
 - **Performance Tracking**: Real-time dashboards cho operational monitoring
@@ -825,6 +886,7 @@ executive_report = {
 ## 🎯 System Capabilities Overview
 
 ### **Core Components:**
+
 ```
 ┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Component       ┃ Capabilities                                                     ┃
@@ -843,6 +905,7 @@ executive_report = {
 ```
 
 **Giải thích:**
+
 - 🤖 **AI CFO Agent**: Phân tích tài chính, insights ngành, đánh giá rủi ro
 - 🛠️ **Financial Tools**: Tính toán tỷ lệ, phân tích dòng tiền, metrics lợi nhuận
 - ⚡ **Workflow Engine**: Multi-step workflows, approval processes, error handling
@@ -850,6 +913,7 @@ executive_report = {
 - 🎭 **Orchestrator**: Điều phối agents, routing thông minh, execution đồng thời
 
 ### **Integration Capabilities:**
+
 ```
 ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ System Type         ┃ Examples                               ┃
@@ -863,6 +927,7 @@ executive_report = {
 ```
 
 **Giải thích:**
+
 - 🏢 **ERP Systems**: SAP, Oracle, NetSuite
 - 📊 **Accounting**: QuickBooks, Xero, Sage
 - 🏦 **Banking APIs**: Plaid, Yodlee, Open Banking
@@ -874,6 +939,7 @@ executive_report = {
 ## 🎉 Demo Completion
 
 ### **Success Summary:**
+
 ```
 ╭────────────────── 🎉 Demo Complete ──────────────────╮
 │ Demo completed successfully!                         │
@@ -890,11 +956,13 @@ executive_report = {
 ```
 
 **Giải thích:**
+
 - ✅ **Demo Status**: Hoàn thành thành công
 - 📋 **Next Steps**: 5 bước để triển khai production
 - 🔧 **CLI Available**: Có thể sử dụng CLI với `ai-financial --help`
 
 ### **System Shutdown:**
+
 ```json
 {"server_id": "default", "event": "MCP Server stopped", "timestamp": "2025-09-13T13:31:26.138099Z", "level": "info"}
 {"server_id": "default", "event": "Server stopped", "timestamp": "2025-09-13T13:31:26.139207Z", "level": "info"}
@@ -902,6 +970,7 @@ executive_report = {
 ```
 
 **Giải thích:**
+
 - ✅ **Graceful Shutdown**: Tất cả components shutdown an toàn
 - 🔧 **Clean Exit**: Không có memory leaks hoặc hanging processes
 
@@ -910,23 +979,27 @@ executive_report = {
 ## ⚠️ Non-Critical Warnings
 
 ### **OTLP Exporter Connection Failures:**
+
 ```
 Transient error StatusCode.UNAVAILABLE encountered while exporting traces to localhost:4317, retrying in 1.15s.
 Failed to export traces to localhost:4317, error code: StatusCode.UNAVAILABLE
 ```
 
 **Giải thích:**
+
 - ⚠️ **Non-Critical**: Chỉ ảnh hưởng đến tracing/monitoring
 - 🔧 **Nguyên nhân**: Không có OTLP collector chạy trên localhost:4317
 - ✅ **Impact**: Không ảnh hưởng core functionality
 - 📝 **Solution**: Cài đặt OTLP collector nếu cần tracing
 
 ### **Runtime Warnings:**
+
 ```
 RuntimeWarning: coroutine 'AICFOAgent._format_response' was never awaited
 ```
 
 **Giải thích:**
+
 - ⚠️ **Async Issue**: Coroutine không được await
 - 🔧 **Impact**: Không ảnh hưởng chức năng chính
 - 📝 **Status**: Cần fix trong future updates
@@ -935,22 +1008,23 @@ RuntimeWarning: coroutine 'AICFOAgent._format_response' was never awaited
 
 ## 📊 Demo Performance Summary
 
-| Component | Status | Performance | Notes |
-|-----------|--------|-------------|-------|
-| System Startup | ✅ Success | ~1 second | Fast initialization |
-| Agent Registration | ✅ Success | Instant | AI CFO Agent ready |
-| Tool Registration | ✅ Success | Instant | 3 tools registered |
-| Financial Analysis | ✅ Success | 0.000s | Extremely fast |
-| Cash Flow Analysis | ✅ Success | 0.000s | Extremely fast |
-| AI CFO Processing | ✅ Success | ~0.01s | Fast analysis |
-| Workflow Execution | ✅ Success | ~0.01s | Fast workflow |
-| System Shutdown | ✅ Success | Instant | Clean exit |
+| Component          | Status     | Performance | Notes               |
+| ------------------ | ---------- | ----------- | ------------------- |
+| System Startup     | ✅ Success | ~1 second   | Fast initialization |
+| Agent Registration | ✅ Success | Instant     | AI CFO Agent ready  |
+| Tool Registration  | ✅ Success | Instant     | 3 tools registered  |
+| Financial Analysis | ✅ Success | 0.000s      | Extremely fast      |
+| Cash Flow Analysis | ✅ Success | 0.000s      | Extremely fast      |
+| AI CFO Processing  | ✅ Success | ~0.01s      | Fast analysis       |
+| Workflow Execution | ✅ Success | ~0.01s      | Fast workflow       |
+| System Shutdown    | ✅ Success | Instant     | Clean exit          |
 
 ---
 
 ## 🎯 Key Takeaways
 
 ### **✅ What Worked:**
+
 1. **System Architecture**: Tất cả components khởi tạo thành công
 2. **Tool Integration**: MCP tools hoạt động hoàn hảo
 3. **Agent System**: AI CFO Agent ready và functional
@@ -959,6 +1033,7 @@ RuntimeWarning: coroutine 'AICFOAgent._format_response' was never awaited
 6. **Logging**: Structured logging với timestamps chi tiết
 
 ### **⚠️ Areas for Improvement:**
+
 1. **Async Handling**: Fix coroutine await issues
 2. **API Configuration**: Setup OpenAI API key
 3. **Database Setup**: Configure PostgreSQL connections
@@ -966,6 +1041,7 @@ RuntimeWarning: coroutine 'AICFOAgent._format_response' was never awaited
 5. **Pydantic Warnings**: Update to json_schema_extra
 
 ### **🚀 Production Readiness:**
+
 - ✅ **Core System**: Stable và functional
 - ✅ **Error Handling**: Comprehensive và graceful
 - ✅ **Performance**: Excellent execution speed
@@ -979,14 +1055,16 @@ RuntimeWarning: coroutine 'AICFOAgent._format_response' was never awaited
 ### **4. 📈 Kết quả Tổng hợp**
 
 #### **🎯 Performance Metrics:**
-| Component | Execution Time | Success Rate | Data Points | Accuracy |
-|-----------|----------------|--------------|-------------|----------|
-| Financial Ratio Calculator | 0.000s | 100% | 2 inputs | High |
-| Cash Flow Analyzer | 0.000s | 100% | 6 periods | High |
-| AI CFO Agent | ~0.01s | 100% | 5 categories | High |
-| Advisory Workflow | ~0.01s | 100% | 5 steps | High |
+
+| Component                  | Execution Time | Success Rate | Data Points  | Accuracy |
+| -------------------------- | -------------- | ------------ | ------------ | -------- |
+| Financial Ratio Calculator | 0.000s         | 100%         | 2 inputs     | High     |
+| Cash Flow Analyzer         | 0.000s         | 100%         | 6 periods    | High     |
+| AI CFO Agent               | ~0.01s         | 100%         | 5 categories | High     |
+| Advisory Workflow          | ~0.01s         | 100%         | 5 steps      | High     |
 
 #### **💰 Financial Health Assessment:**
+
 ```python
 overall_financial_health = {
     "liquidity_score": "Excellent",      # Current Ratio: 2.00
@@ -1000,6 +1078,7 @@ overall_financial_health = {
 ```
 
 #### **🔍 Dữ liệu Test được sử dụng (Tổng hợp):**
+
 ```python
 comprehensive_test_data = {
     "financial_ratios": {
@@ -1028,6 +1107,7 @@ comprehensive_test_data = {
 ```
 
 #### **🔄 Luồng xử lý Tổng hợp:**
+
 ```
 Input Data → Validation → Analysis → Interpretation → Recommendations → Reporting
      ↓           ↓          ↓           ↓              ↓              ↓
@@ -1038,12 +1118,14 @@ Input Data → Validation → Analysis → Interpretation → Recommendations �
 #### **📊 Kết quả Tài chính Chi tiết:**
 
 **1. 💧 Liquidity Analysis:**
+
 - **Current Ratio**: 2.00 (Strong)
-- **Quick Ratio**: 1.50 (Good)  
+- **Quick Ratio**: 1.50 (Good)
 - **Cash Ratio**: 0.80 (Adequate)
 - **Interpretation**: Công ty có khả năng thanh toán nợ ngắn hạn gấp 2 lần
 
 **2. 💰 Profitability Analysis:**
+
 - **Gross Margin**: 35% (Above industry avg: 30%)
 - **Net Margin**: 12% (Above industry avg: 8%)
 - **ROA**: 8% (Above industry avg: 6%)
@@ -1051,24 +1133,28 @@ Input Data → Validation → Analysis → Interpretation → Recommendations �
 - **Interpretation**: Performance vượt trội so với ngành healthcare
 
 **3. ⚡ Efficiency Analysis:**
+
 - **Asset Turnover**: 1.8 (Above industry avg: 1.5)
 - **Inventory Turnover**: 6.5 (Above industry avg: 5.0)
 - **Receivables Turnover**: 8.2 (Above industry avg: 7.0)
 - **Interpretation**: Hiệu quả sử dụng tài sản cao
 
 **4. ⚖️ Leverage Analysis:**
+
 - **Debt/Equity**: 0.4 (Conservative, < 0.5)
 - **Debt/Assets**: 0.28 (Low risk, < 0.3)
 - **Interest Coverage**: 4.5 (Safe, > 2.5)
 - **Interpretation**: Cấu trúc nợ bảo thủ, ít rủi ro
 
 **5. 📈 Growth Analysis:**
+
 - **Revenue Growth**: 12% YoY
 - **Profit Growth**: 15% YoY
 - **Cash Flow Growth**: 10.6% per period
 - **Interpretation**: Tăng trưởng bền vững và ổn định
 
 #### **🎯 Strategic Recommendations:**
+
 ```python
 strategic_recommendations = {
     "short_term": [
@@ -1090,6 +1176,7 @@ strategic_recommendations = {
 ```
 
 #### **⚠️ Risk Assessment Summary:**
+
 ```python
 risk_summary = {
     "low_risks": [
@@ -1116,42 +1203,278 @@ risk_summary = {
 
 ### **✅ Demo Thành công với Insights Tài chính:**
 
-1. **💰 Financial Performance**: 
+1. **💰 Financial Performance**:
+
    - Strong liquidity position (Current Ratio: 2.00)
    - Above-industry profitability (Net Margin: 12%)
    - High operational efficiency (Asset Turnover: 1.8)
    - Conservative debt structure (Debt/Equity: 0.4)
-
 2. **📈 Growth Potential**:
+
    - 12% YoY revenue growth
    - 10.6% cash flow growth rate
    - Ready for strategic investments
    - Strong competitive position
-
 3. **⚖️ Risk Management**:
+
    - Low liquidity and credit risks
    - Medium market and regulatory risks
    - Comprehensive risk mitigation strategies
    - Conservative financial approach
-
 4. **🎯 Business Value**:
+
    - Data-driven decision support
    - Real-time financial monitoring
    - Automated reporting and analysis
    - Strategic planning capabilities
-
 5. **🚀 System Performance**:
+
    - Sub-second execution times
    - 100% success rate
    - Comprehensive error handling
    - Production-ready architecture
 
-**System Status**: 🟢 **PRODUCTION READY** với proper configuration  
-**Financial Health**: 🟢 **STRONG** - Ready for growth and investment  
+**System Status**: 🟢 **PRODUCTION READY** với proper configuration
+**Financial Health**: 🟢 **STRONG** - Ready for growth and investment
 **Risk Level**: 🟡 **LOW-MEDIUM** - Well-managed risks with mitigation strategies
 
 ---
 
-*Tài liệu giải thích được tạo bởi AI Assistant*  
-*Ngày tạo: 13/09/2025*  
+*Tài liệu giải thích được tạo bởi  Doan Ngoc Cuong Assistant*
+*Ngày tạo: 13/09/2025*
 *Version: 2.0 - Enhanced with Financial Analysis*
+
+---
+
+```
+(.venv) PS D:\GIT\MVP_Multi-Agent-Financial-Platform_LangchainLanggraph_T9_2025\New folder\src> python run_demo.py
+🏦 AI Financial Multi-Agent System
+==================================================
+WARNING: Using auto-generated SECRET_KEY for development. Set SECRET_KEY environment variable for production.
+🔧 Environment: development
+🔧 Debug mode: True
+🔧 API endpoint: http://0.0.0.0:8000
+⚠️  OpenAI API key not configured (demo mode)
+
+What would you like to do?
+1. Run interactive demo
+2. Start web server
+3. Run CLI chat
+4. Show system status
+5. Exit
+
+Enter your choice (1-5): 1
+
+🚀 Starting interactive demo...
+D:\GIT\MVP_Multi-Agent-Financial-Platform_LangchainLanggraph_T9_2025\New folder\.venv\Lib\site-packages\pydantic\_internal\_config.py:373: UserWarning: Valid config keys have changed in V2:
+* 'schema_extra' has been renamed to 'json_schema_extra'
+  warnings.warn(message, UserWarning)
+D:\GIT\MVP_Multi-Agent-Financial-Platform_LangchainLanggraph_T9_2025\New folder\.venv\Lib\site-packages\pydantic\_internal\_config.py:373: UserWarning: Valid config keys have changed in V2:
+* 'schema_extra' has been renamed to 'json_schema_extra'
+  warnings.warn(message, UserWarning)
+D:\GIT\MVP_Multi-Agent-Financial-Platform_LangchainLanggraph_T9_2025\New folder\.venv\Lib\site-packages\pydantic\_internal\_config.py:373: UserWarning: Valid config keys have changed in V2:
+* 'schema_extra' has been renamed to 'json_schema_extra'
+  warnings.warn(message, UserWarning)
+{"server_id": "default", "name": "Default MCP Server", "host": "localhost", "port": 8001, "event": "MCP Server initialized", "timestamp": "2025-09-13T13:31:25.929592Z", "level": "info"}
+{"default_server_host": "localhost", "default_server_port": 8001, "event": "Tool Hub initialized", "timestamp": "2025-09-13T13:31:25.930591Z", "level": "info"}
+{"event": "Workflow Engine initialized", "timestamp": "2025-09-13T13:31:25.933601Z", "level": "info"}
+{"event": "Context Manager initialized", "timestamp": "2025-09-13T13:31:25.934601Z", "level": "info"}
+{"max_concurrent_agents": 10, "event": "Agent Orchestrator initialized", "timestamp": "2025-09-13T13:31:25.934601Z", "level": "info"}
+D:\GIT\MVP_Multi-Agent-Financial-Platform_LangchainLanggraph_T9_2025\New folder\.venv\Lib\site-packages\pydantic\_internal\_config.py:373: UserWarning: Valid config keys have changed in V2:
+* 'schema_extra' has been renamed to 'json_schema_extra'
+  warnings.warn(message, UserWarning)
+╭───────────────────── 🏦 Welcome ─────────────────────╮
+│ AI Financial Multi-Agent System Demo                 │
+│ Comprehensive financial automation platform for SMBs │
+╰──────────────────────────────────────────────────────╯
+╭───────── 🚀 System Initialization ─────────╮
+│ Setting up AI Financial Multi-Agent System │
+╰────────────────────────────────────────────╯
+📋 Registering agents...
+{"agent_id": "ai_cfo_agent", "event": "OpenAI API key not configured, using mock LLM for development", "timestamp": "2025-09-13T13:31:26.016076Z", "level": "warning"}  
+{"agent_id": "ai_cfo_agent", "name": "AI CFO", "model": "gpt-4-turbo-preview", "event": "Agent initialized", "timestamp": "2025-09-13T13:31:26.031121Z", "level": "info"}   
+{"industry": "healthcare", "metrics_count": 4, "event": "AI CFO Agent initialized", "timestamp": "2025-09-13T13:31:26.031121Z", "level": "info"}
+{"agent_id": "ai_cfo_agent", "agent_name": "AI CFO", "capabilities": 10, "event": "Agent registered", "timestamp": "2025-09-13T13:31:26.032122Z", "level": "info"}
+🔧 Registering tools...
+{"tool_name": "financial_ratio_calculator", "category": "financial_analysis", "version": "1.0.0", "event": "Tool initialized", "timestamp": "2025-09-13T13:31:26.033151Z", "level": "info"}
+{"tool_name": "financial_ratio_calculator", "server_id": "default", "category": "financial_analysis", "event": "Tool registered", "timestamp": "2025-09-13T13:31:26.033151Z", "level": "info"}
+{"tool_name": "financial_ratio_calculator", "server_id": "default", "category": "financial_analysis", "event": "Tool registered with hub", "timestamp": "2025-09-13T13:31:26.034144Z", "level": "info"}
+{"tool_name": "cash_flow_analyzer", "category": "financial_analysis", "version": "1.0.0", "event": "Tool initialized", "timestamp": "2025-09-13T13:31:26.034144Z", "level": "info"}
+{"tool_name": "cash_flow_analyzer", "server_id": "default", "category": "financial_analysis", "event": "Tool registered", "timestamp": "2025-09-13T13:31:26.035120Z", "level": "info"}
+{"tool_name": "cash_flow_analyzer", "server_id": "default", "category": "financial_analysis", "event": "Tool registered with hub", "timestamp": "2025-09-13T13:31:26.035120Z", "level": "info"}
+{"tool_name": "profitability_analyzer", "category": "financial_analysis", "version": "1.0.0", "event": "Tool initialized", "timestamp": "2025-09-13T13:31:26.035120Z", "level": "info"}
+{"tool_name": "profitability_analyzer", "server_id": "default", "category": "financial_analysis", "event": "Tool registered", "timestamp": "2025-09-13T13:31:26.035120Z", "level": "info"}
+{"tool_name": "profitability_analyzer", "server_id": "default", "category": "financial_analysis", "event": "Tool registered with hub", "timestamp": "2025-09-13T13:31:26.036153Z", "level": "info"}
+⚡ Starting system...
+{"server_id": "default", "host": "localhost", "port": 8001, "tools_count": 3, "event": "MCP Server started", "timestamp": "2025-09-13T13:31:26.037150Z", "level": "info"}   
+{"server_id": "default", "event": "Server started", "timestamp": "2025-09-13T13:31:26.037150Z", "level": "info"}
+{"registered_agents": 1, "event": "Agent Orchestrator started", "timestamp": "2025-09-13T13:31:26.037150Z", "level": "info"}
+✅ System ready!
+
+╭─ 📊 Status Check ──╮
+│ System Status Demo │
+╰────────────────────╯
+     Agent Orchestrator Status  
+┏━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
+┃ Property          ┃ Value        ┃
+┡━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
+│ Running           │ True         │
+│ Registered Agents │ 1            │
+│ Active Workflows  │ 0            │
+│ Agent List        │ ai_cfo_agent │
+└───────────────────┴──────────────┘
+
+          Tool Hub Status
+┏━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┓
+┃ Property    ┃ Value              ┃
+┡━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━┩
+│ Total Tools │ 3                  │
+│ Servers     │ 1                  │
+│ Categories  │ financial_analysis │
+└─────────────┴────────────────────┘
+
+╭─ 🔧 Financial Tools ─╮
+│ Tool Execution Demo  │
+╰──────────────────────╯
+Demo 1: Financial Ratio Calculation
+⠋ Calculating current ratio...{"tool_name": "financial_ratio_calculator", "server_id": "default", "execution_time": 0.0, "success": true, "event": "Tool executed successfully", "timestamp": "2025-09-13T13:31:26.051907Z", "level": "info"}
+
+╭───────────────────────────── ✅ Ratio Analysis Result ─────────────────────────────╮
+│ Current Ratio: 2.00                                                                │
+│ Current Assets: $150,000.00                                                        │
+│ Current Liabilities: $75,000.00                                                    │
+│ Interpretation: Strong liquidity position                                          │
+│ Execution Time: 0.000s                                                             │
+╰────────────────────────────────────────────────────────────────────────────────────╯
+
+Demo 2: Cash Flow Analysis
+⠋ Analyzing cash flow trends...{"tool_name": "cash_flow_analyzer", "server_id": "default", "execution_time": 0.0, "success": true, "event": "Tool executed successfully", "timestamp": "2025-09-13T13:31:26.059937Z", "level": "info"}
+
+╭─────────────────────────── 📈 Cash Flow Analysis Result ───────────────────────────╮
+│ Cash Flow Trend: Strong Positive                                                   │
+│ Average Change: 10.6%                                                              │
+│ Volatility Level: Low                                                              │
+│ Average Flow: $31,333.33                                                           │
+│ Positive Periods: 6/6                                                              │
+╰────────────────────────────────────────────────────────────────────────────────────╯
+
+╭─── 🤖 AI CFO Agent ────╮
+│ Agent Interaction Demo │
+╰────────────────────────╯
+Demo: Financial Health Analysis
+⠋ AI CFO analyzing financial health...{"agent_id": "ai_cfo_agent", "request_length": 115, "event": "Request analyzed", "timestamp": "2025-09-13T13:31:26.078458Z", "level": "info"}
+{"agent_id": "ai_cfo_agent", "company_id": "default", "data_points": 5, "event": "Financial data gathered", "timestamp": "2025-09-13T13:31:26.079993Z", "level": "info"}  
+{"agent_id": "ai_cfo_agent", "analysis_types": ["liquidity_analysis", "profitability_analysis", "efficiency_analysis", "leverage_analysis", "industry_comparison"], "event": "Financial analysis completed", "timestamp": "2025-09-13T13:31:26.080990Z", "level": "info"}
+{"agent_id": "ai_cfo_agent", "insights_length": 0, "event": "Insights generated", "timestamp": "2025-09-13T13:31:26.081990Z", "level": "info"}
+{"agent_id": "ai_cfo_agent", "risk_categories": 5, "event": "Risk assessment completed", "timestamp": "2025-09-13T13:31:26.084021Z", "level": "info"}
+{"agent_id": "ai_cfo_agent", "recommendations_length": 0, "event": "Recommendations generated", "timestamp": "2025-09-13T13:31:26.084988Z", "level": "info"}
+{"agent_id": "ai_cfo_agent", "report_length": 565, "event": "CFO analysis completed", "timestamp": "2025-09-13T13:31:26.086991Z", "level": "info"}
+{"agent_id": "ai_cfo_agent", "session_id": "0d683ddd-5c9f-4265-8978-2d74c1473321", "trace_id": 177786821065587325143714912750204168013, "event": "Agent request processed successfully", "timestamp": "2025-09-13T13:31:26.087988Z", "level": "info"}
+{"error": "'coroutine' object has no attribute 'get'", "session_id": "0d683ddd-5c9f-4265-8978-2d74c1473321", "event": "Request routing failed", "timestamp": "2025-09-13T13:31:26.091989Z", "level": "error"}
+D:\GIT\MVP_Multi-Agent-Financial-Platform_LangchainLanggraph_T9_2025\New
+folder\src\ai_financial\orchestrator\orchestrator.py:142: RuntimeWarning: coroutine   
+'AICFOAgent._format_response' was never awaited
+  return {
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+╭────────────────────────── 🤖 AI CFO Response (Demo Mode) ──────────────────────────╮
+│ Demo Mode - OpenAI API not configured                                              │
+│                                                                                    │
+│ The AI CFO agent would normally provide:                                           │
+│ • Comprehensive financial health analysis                                          │
+│ • Industry-specific insights for healthcare                                        │
+│ • Risk assessment and opportunities                                                │
+│ • Strategic recommendations                                                        │
+│ • Executive summary with citations                                                 │
+│                                                                                    │
+│ Error: Routing failed: 'coroutine' object has no attribute 'get'                   │
+╰────────────────────────────────────────────────────────────────────────────────────╯
+
+
+╭─ ⚡ Advisory Workflow ──╮
+│ Workflow Execution Demo │
+╰─────────────────────────╯
+Demo: Advisory Workflow for CEO Support
+Workflow Steps:
+  1. 📊 Data Synchronization
+  2. 🔍 Financial Analysis
+  3. 📈 Forecasting
+  4. ⚠️ Risk Assessment
+  5. 📋 Executive Reporting
+
+⠋ Executing advisory workflow...{"agent_id": "ai_cfo_agent", "request_length": 67, "event": "Request analyzed", "timestamp": "2025-09-13T13:31:26.114082Z", "level": "info"}
+{"agent_id": "ai_cfo_agent", "company_id": "default", "data_points": 5, "event": "Financial data gathered", "timestamp": "2025-09-13T13:31:26.115049Z", "level": "info"}  
+{"agent_id": "ai_cfo_agent", "analysis_types": ["liquidity_analysis", "profitability_analysis", "efficiency_analysis", "leverage_analysis", "industry_comparison"], "event": "Financial analysis completed", "timestamp": "2025-09-13T13:31:26.116045Z", "level": "info"}
+{"agent_id": "ai_cfo_agent", "insights_length": 0, "event": "Insights generated", "timestamp": "2025-09-13T13:31:26.117046Z", "level": "info"}
+{"agent_id": "ai_cfo_agent", "risk_categories": 5, "event": "Risk assessment completed", "timestamp": "2025-09-13T13:31:26.118047Z", "level": "info"}
+{"agent_id": "ai_cfo_agent", "recommendations_length": 0, "event": "Recommendations generated", "timestamp": "2025-09-13T13:31:26.119051Z", "level": "info"}
+{"agent_id": "ai_cfo_agent", "report_length": 565, "event": "CFO analysis completed", "timestamp": "2025-09-13T13:31:26.120051Z", "level": "info"}
+{"agent_id": "ai_cfo_agent", "session_id": "74dffffc-ac77-47b4-9545-bdf430692b8b", "trace_id": 66030045462428017218947792823702500766, "event": "Agent request processed successfully", "timestamp": "2025-09-13T13:31:26.121050Z", "level": "info"}
+╭────────────────────────── ✅ Advisory Workflow Complete ───────────────────────────╮
+│ Workflow completed successfully!                                                   │
+│                                                                                    │
+│ Workflow ID: 3761c959-5d42-4a72-89d2-affa2cef64b2                                  │
+│ Completed Steps: 1                                                                 │
+│ Results Available: 1                                                               │
+│                                                                                    │
+│ The advisory workflow would provide:                                               │
+│ • Real-time financial health dashboard                                             │
+│ • 13-week cash flow forecast                                                       │
+│ • 12-month P&L projections                                                         │
+│ • Risk alerts and opportunities                                                    │
+│ • Executive brief with recommendations                                             │
+╰────────────────────────────────────────────────────────────────────────────────────╯
+
+
+D:\GIT\MVP_Multi-Agent-Financial-Platform_LangchainLanggraph_T9_2025\New folder\src\demo.py:406: RuntimeWarning: coroutine 'AICFOAgent._format_response' was never awaited  
+  await demo_workflow_execution(orchestrator)
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+╭─ 🎯 AI Financial Multi-Agent System ─╮
+│ System Capabilities Overview         │
+╰──────────────────────────────────────╯
+                                 System Capabilities
+┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Component       ┃ Capabilities                                                     ┃
+┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ AI CFO Agent    │ Financial analysis, industry insights, risk assessment,          │
+│                 │ strategic recommendations                                        │
+│ Financial Tools │ Ratio calculations, cash flow analysis, profitability metrics,   │
+│                 │ trend analysis                                                   │
+│ Workflow Engine │ Multi-step workflows, approval processes, error handling, state  │
+│                 │ management                                                       │
+│ MCP Tool Hub    │ Centralized tool management, standardized interfaces,            │
+│                 │ performance monitoring                                           │
+│ Orchestrator    │ Agent coordination, intelligent routing, concurrent execution,   │
+│                 │ context management                                               │
+└─────────────────┴──────────────────────────────────────────────────────────────────┘
+
+                    Integration Capabilities
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ System Type         ┃ Examples                               ┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ERP Systems         │ SAP, Oracle, NetSuite                  │
+│ Accounting Software │ QuickBooks, Xero, Sage                 │
+│ Banking APIs        │ Plaid, Yodlee, Open Banking            │
+│ POS Systems         │ Square, Shopify, Toast                 │
+│ Industry Software   │ Epic (Healthcare), DealerSocket (Auto) │
+└─────────────────────┴────────────────────────────────────────┘
+
+╭────────────────── 🎉 Demo Complete ──────────────────╮
+│ Demo completed successfully!                         │
+│                                                      │
+│ Next steps:                                          │
+│ 1. Configure OpenAI API key for full AI capabilities │
+│ 2. Set up database connections for data persistence  │
+│ 3. Configure external system integrations            │
+│ 4. Customize agents for your industry                │
+│ 5. Deploy to production environment                  │
+│                                                      │
+│ Run 'ai-financial --help' for CLI options            │
+╰──────────────────────────────────────────────────────╯
+{"server_id": "default", "event": "MCP Server stopped", "timestamp": "2025-09-13T13:31:26.138099Z", "level": "info"}
+{"server_id": "default", "event": "Server stopped", "timestamp": "2025-09-13T13:31:26.139207Z", "level": "info"}
+{"event": "Agent Orchestrator stopped", "timestamp": "2025-09-13T13:31:26.139207Z", "level": "info"}
+Transient error StatusCode.UNAVAILABLE encountered while exporting traces to localhost:4317, retrying in 1.15s.
+Failed to export traces to localhost:4317, error code: StatusCode.UNAVAILABLE
+(.venv) PS D:\GIT\MVP_Multi-Agent-Financial-Platform_LangchainLanggraph_T9_2025\New folder\src>
+
+```

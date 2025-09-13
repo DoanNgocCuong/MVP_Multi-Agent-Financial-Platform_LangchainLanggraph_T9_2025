@@ -4,8 +4,8 @@
 
 Tài liệu này cung cấp cái nhìn chi tiết về kiến trúc code của AI Financial Multi-Agent System, bao gồm cấu trúc thư mục, các component chính, và cách chúng tương tác với nhau.
 
-**Phiên bản hệ thống**: 0.1.0  
-**Ngày cập nhật**: 13/09/2025  
+**Phiên bản hệ thống**: 0.1.0
+**Ngày cập nhật**: 13/09/2025
 **Môi trường**: Python 3.12, FastAPI, LangChain, LangGraph
 
 ---
@@ -56,6 +56,7 @@ src/ai_financial/
 ## 🧩 Kiến trúc Layered
 
 ### **Layer 1: Presentation Layer**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    Presentation Layer                        │
@@ -67,6 +68,7 @@ src/ai_financial/
 ```
 
 ### **Layer 2: Orchestration Layer**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                 Orchestration Layer                         │
@@ -79,6 +81,7 @@ src/ai_financial/
 ```
 
 ### **Layer 3: Agent Layer**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    Agent Layer                              │
@@ -90,6 +93,7 @@ src/ai_financial/
 ```
 
 ### **Layer 4: MCP Tools Layer**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    MCP Tools Layer                          │
@@ -101,6 +105,7 @@ src/ai_financial/
 ```
 
 ### **Layer 5: Data Models Layer**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                   Data Models Layer                         │
@@ -113,6 +118,7 @@ src/ai_financial/
 ```
 
 ### **Layer 6: Core Infrastructure**
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                Core Infrastructure                          │
@@ -125,11 +131,16 @@ src/ai_financial/
 
 ---
 
+---
+
+
+
 ## 🔧 Component Chi tiết
 
 ### **1. Core Infrastructure (`core/`)**
 
 #### **`config.py` - Configuration Management**
+
 ```python
 class DatabaseSettings(BaseSettings):
     postgres_host: str = "localhost"
@@ -137,7 +148,7 @@ class DatabaseSettings(BaseSettings):
     postgres_user: str = "ai_financial"
     postgres_password: str = ""
     postgres_db: str = "ai_financial"
-    
+  
     @property
     def postgres_url(self) -> str:
         return f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"
@@ -147,13 +158,14 @@ class LLMSettings(BaseSettings):
     openai_model: str = "gpt-4-turbo-preview"
     openai_temperature: float = 0.1
     openai_max_tokens: int = 4000
-    
+  
     @property
     def has_openai_key(self) -> bool:
         return bool(self.openai_api_key and self.openai_api_key.startswith("sk-"))
 ```
 
 **Chức năng:**
+
 - Quản lý tất cả configuration settings
 - Environment variables handling
 - Database connection strings
@@ -161,6 +173,7 @@ class LLMSettings(BaseSettings):
 - Security settings
 
 #### **`base_agent.py` - Base Agent Class**
+
 ```python
 class BaseAgent(ABC):
     def __init__(self, agent_id: str, name: str, description: str):
@@ -170,17 +183,17 @@ class BaseAgent(ABC):
         self.llm = ChatOpenAI(...)  # LangChain integration
         self.graph = self._build_graph()  # LangGraph integration
         self.compiled_graph = self.graph.compile()
-    
+  
     @abstractmethod
     def _build_graph(self) -> StateGraph:
         """Build the LangGraph state graph for this agent."""
         pass
-    
+  
     @abstractmethod
     async def _process_request(self, state: AgentState) -> AgentState:
         """Process a request in the agent's main logic."""
         pass
-    
+  
     async def invoke(self, request, context=None) -> Dict[str, Any]:
         """Invoke the agent with a request."""
         # Execute the graph
@@ -189,6 +202,7 @@ class BaseAgent(ABC):
 ```
 
 **Chức năng:**
+
 - Base class cho tất cả AI agents
 - LangChain/LangGraph integration
 - Async request processing
@@ -196,6 +210,7 @@ class BaseAgent(ABC):
 - State management
 
 #### **`logging.py` - Logging và Tracing**
+
 ```python
 def setup_logging() -> None:
     """Set up structured logging with OpenTelemetry integration."""
@@ -221,6 +236,7 @@ def setup_tracing() -> None:
 ```
 
 **Chức năng:**
+
 - Structured logging với JSON format
 - OpenTelemetry tracing
 - Performance monitoring
@@ -229,6 +245,7 @@ def setup_tracing() -> None:
 ### **2. Data Models (`models/`)**
 
 #### **`agent_models.py` - Agent Models**
+
 ```python
 class AgentContext(BaseModel):
     agent_id: str
@@ -257,6 +274,7 @@ class WorkflowState(BaseModel):
 ```
 
 #### **`financial_models.py` - Financial Models**
+
 ```python
 class Transaction(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid4()))
@@ -293,6 +311,7 @@ class Invoice(BaseModel):
 ### **3. Agent Layer (`agents/`)**
 
 #### **`advisory/ai_cfo_agent.py` - AI CFO Agent**
+
 ```python
 class AICFOAgent(BaseAgent):
     def __init__(self, industry: str = "general"):
@@ -304,10 +323,10 @@ class AICFOAgent(BaseAgent):
         self.industry = industry
         self.industry_metrics = self._load_industry_metrics()
         self.industry_benchmarks = self._load_industry_benchmarks()
-    
+  
     def _build_graph(self) -> StateGraph:
         graph = StateGraph(AgentState)
-        
+      
         # Add nodes
         graph.add_node("analyze_request", self._analyze_request)
         graph.add_node("gather_data", self._gather_financial_data)
@@ -316,7 +335,7 @@ class AICFOAgent(BaseAgent):
         graph.add_node("assess_risks", self._assess_risks)
         graph.add_node("provide_recommendations", self._provide_recommendations)
         graph.add_node("format_response", self._format_response)
-        
+      
         # Add edges
         graph.set_entry_point("analyze_request")
         graph.add_edge("analyze_request", "gather_data")
@@ -326,42 +345,42 @@ class AICFOAgent(BaseAgent):
         graph.add_edge("assess_risks", "provide_recommendations")
         graph.add_edge("provide_recommendations", "format_response")
         graph.add_edge("format_response", END)
-        
+      
         return graph
-    
+  
     async def _analyze_request(self, state: AgentState) -> AgentState:
         """Analyze the incoming request to determine analysis type."""
         # LLM-based request classification
         # Store analysis plan in metadata
         pass
-    
+  
     async def _gather_financial_data(self, state: AgentState) -> AgentState:
         """Gather relevant financial data for analysis."""
         # Fetch from databases
         # Simulate financial data for demo
         pass
-    
+  
     async def _perform_financial_analysis(self, state: AgentState) -> AgentState:
         """Perform comprehensive financial analysis."""
         # Liquidity, profitability, efficiency, leverage analysis
         # Industry comparison
         pass
-    
+  
     async def _generate_insights(self, state: AgentState) -> AgentState:
         """Generate financial insights using LLM."""
         # LLM-based insight generation
         pass
-    
+  
     async def _assess_risks(self, state: AgentState) -> AgentState:
         """Assess financial risks and opportunities."""
         # Risk assessment across multiple categories
         pass
-    
+  
     async def _provide_recommendations(self, state: AgentState) -> AgentState:
         """Provide actionable financial recommendations."""
         # Strategic recommendations with timelines
         pass
-    
+  
     async def _format_response(self, state: AgentState) -> AgentState:
         """Format the final CFO response."""
         # Executive-level report formatting
@@ -369,6 +388,7 @@ class AICFOAgent(BaseAgent):
 ```
 
 **Workflow của AI CFO Agent:**
+
 ```
 Request → Analyze → Gather Data → Analysis → Insights → Risk Assessment → Recommendations → Format Response
 ```
@@ -376,37 +396,39 @@ Request → Analyze → Gather Data → Analysis → Insights → Risk Assessmen
 ### **4. MCP Tools Layer (`mcp/`)**
 
 #### **`server.py` - MCP Server Implementation**
+
 ```python
 class MCPServer:
     def __init__(self, server_id: str = "default"):
         self.server_id = server_id
         self.tools: Dict[str, BaseTool] = {}
         self.tool_hub = get_tool_hub()
-    
+  
     async def handle_request(self, request: MCPRequest) -> MCPResponse:
         if request.method == "tools/list":
             tools = [def_.model_dump() for def_ in self.get_tool_definitions()]
             return MCPResponse(id=request.id, result={"tools": tools})
-        
+      
         elif request.method == "tools/call":
             tool_name = request.params.get("name")
             parameters = request.params.get("arguments", {})
             result = await self.execute_tool(tool_name, parameters)
             return MCPResponse(id=request.id, result=result.model_dump())
-        
+      
         elif request.method == "tools/get":
             definition = self.get_tool_definition(tool_name)
             return MCPResponse(id=request.id, result=definition.model_dump())
-    
+  
     async def execute_tool(self, tool_name: str, parameters: Dict[str, Any]) -> ToolResult:
         tool = self.tools.get(tool_name)
         if not tool:
             return ToolResult(success=False, error=f"Tool {tool_name} not found")
-        
+      
         return await tool.execute(parameters)
 ```
 
 #### **`tools/financial_tools.py` - Financial Analysis Tools**
+
 ```python
 class FinancialRatioTool(BaseTool):
     def __init__(self):
@@ -416,11 +438,11 @@ class FinancialRatioTool(BaseTool):
             category="financial_analysis",
             version="1.0.0"
         )
-    
+  
     async def execute(self, parameters: Dict[str, Any], context=None) -> ToolResult:
         ratio_type = parameters.get("ratio_type")
         financial_data = parameters.get("financial_data", {})
-        
+      
         if ratio_type == "current_ratio":
             result = self._calculate_current_ratio(financial_data)
         elif ratio_type == "quick_ratio":
@@ -431,18 +453,18 @@ class FinancialRatioTool(BaseTool):
             result = self._calculate_roe(financial_data)
         else:
             return ToolResult(success=False, error=f"Unknown ratio type: {ratio_type}")
-        
+      
         return ToolResult(success=True, data=result)
-    
+  
     def _calculate_current_ratio(self, data: Dict[str, Any]) -> Dict[str, Any]:
         current_assets = data.get("current_assets", 0)
         current_liabilities = data.get("current_liabilities", 0)
-        
+      
         if current_liabilities == 0:
             return {"error": "Cannot calculate current ratio: current liabilities is zero"}
-        
+      
         ratio = current_assets / current_liabilities
-        
+      
         return {
             "ratio_type": "current_ratio",
             "value": float(ratio),
@@ -454,6 +476,7 @@ class FinancialRatioTool(BaseTool):
 ### **5. Orchestration Layer (`orchestrator/`)**
 
 #### **`orchestrator.py` - Main Orchestrator**
+
 ```python
 class AgentOrchestrator:
     def __init__(self):
@@ -464,12 +487,12 @@ class AgentOrchestrator:
         self.tool_hub = get_tool_hub()
         self._running = False
         self._max_concurrent_agents = settings.workflow.max_concurrent_agents
-    
+  
     def register_agent(self, agent: BaseAgent) -> None:
         """Register an agent with the orchestrator."""
         self.agents[agent.agent_id] = agent
         logger.info(f"Agent {agent.agent_id} registered")
-    
+  
     async def route_request(self, request: str, workflow_type: str) -> Dict[str, Any]:
         """Route a request to the appropriate workflow."""
         workflow_id = str(uuid4())
@@ -478,9 +501,9 @@ class AgentOrchestrator:
             workflow_type=workflow_type,
             status=WorkflowStatus.PROCESSING
         )
-        
+      
         self.active_workflows[workflow_id] = workflow_state
-        
+      
         try:
             if workflow_type == "advisory":
                 result = await self._execute_advisory_workflow(request, workflow_state)
@@ -488,30 +511,30 @@ class AgentOrchestrator:
                 result = await self._execute_transactional_workflow(request, workflow_state)
             else:
                 raise ValueError(f"Unknown workflow type: {workflow_type}")
-            
+          
             workflow_state.status = WorkflowStatus.COMPLETED
             workflow_state.results = result
-            
+          
             return result
-            
+          
         except Exception as e:
             workflow_state.status = WorkflowStatus.ERROR
             workflow_state.error = str(e)
             logger.error(f"Workflow {workflow_id} failed: {e}")
             raise
-    
+  
     async def _execute_advisory_workflow(self, request: str, workflow_state: WorkflowState) -> Dict[str, Any]:
         """Execute advisory workflow using AI CFO agent."""
         ai_cfo = self.agents.get("ai_cfo_agent")
         if not ai_cfo:
             raise ValueError("AI CFO agent not available")
-        
+      
         context = AgentContext(
             agent_id="ai_cfo_agent",
             user_id="system",
             company_id="default"
         )
-        
+      
         result = await ai_cfo.invoke(request, context)
         return result
 ```
@@ -519,38 +542,39 @@ class AgentOrchestrator:
 ### **6. Presentation Layer**
 
 #### **`main.py` - FastAPI Application**
+
 ```python
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager."""
     logger.info("Starting AI Financial Multi-Agent System")
-    
+  
     # Initialize components
     orchestrator = get_orchestrator()
     tool_hub = get_tool_hub()
-    
+  
     # Register agents
     try:
         ai_cfo = AICFOAgent(industry="general")
         orchestrator.register_agent(ai_cfo)
     except Exception as e:
         logger.warning(f"Failed to register AI CFO agent: {e}")
-    
+  
     # Register tools
     financial_ratio_tool = FinancialRatioTool()
     cash_flow_tool = CashFlowAnalysisTool()
     profitability_tool = ProfitabilityAnalysisTool()
-    
+  
     tool_hub.register_tool(financial_ratio_tool)
     tool_hub.register_tool(cash_flow_tool)
     tool_hub.register_tool(profitability_tool)
-    
+  
     # Start MCP server
     mcp_server = MCPServer()
     await mcp_server.start()
-    
+  
     yield
-    
+  
     # Cleanup
     await orchestrator.stop()
     await mcp_server.stop()
@@ -600,16 +624,19 @@ async def execute_tool(tool_name: str, request: Dict[str, Any]):
 ## 🔄 Data Flow
 
 ### **1. Request Flow**
+
 ```
 Client Request → FastAPI → Orchestrator → Agent → Tools → Response
 ```
 
 ### **2. Agent Workflow**
+
 ```
 User Input → Request Analysis → Data Gathering → Analysis → Insights → Risk Assessment → Recommendations → Response Formatting
 ```
 
 ### **3. Tool Execution Flow**
+
 ```
 Agent Request → Tool Hub → Tool Selection → Parameter Validation → Tool Execution → Result Processing → Agent Response
 ```
@@ -619,26 +646,31 @@ Agent Request → Tool Hub → Tool Selection → Parameter Validation → Tool 
 ## 🎯 Design Patterns
 
 ### **1. Factory Pattern**
+
 - `get_orchestrator()` - Singleton orchestrator
 - `get_tool_hub()` - Singleton tool hub
 - Agent creation with industry specialization
 
 ### **2. Strategy Pattern**
+
 - Different analysis strategies for different industries
 - Multiple tool implementations for different calculations
 - Various workflow types (advisory, transactional)
 
 ### **3. Observer Pattern**
+
 - Workflow state changes
 - Agent status updates
 - Tool execution monitoring
 
 ### **4. Template Method Pattern**
+
 - `BaseAgent._process_request()` - Template for agent processing
 - `BaseTool.execute()` - Template for tool execution
 - Workflow execution templates
 
 ### **5. Dependency Injection**
+
 - Configuration injection through settings
 - Tool injection into agents
 - Context injection into workflows
@@ -648,6 +680,7 @@ Agent Request → Tool Hub → Tool Selection → Parameter Validation → Tool 
 ## 🔒 Security Architecture
 
 ### **1. Authentication & Authorization**
+
 ```python
 class AgentContext(BaseModel):
     user_id: str
@@ -658,11 +691,13 @@ class AgentContext(BaseModel):
 ```
 
 ### **2. Data Validation**
+
 - Pydantic models for all data structures
 - Input validation at API boundaries
 - Parameter validation in tools
 
 ### **3. Audit Logging**
+
 ```python
 # Structured logging with correlation IDs
 logger.info(
@@ -679,6 +714,7 @@ logger.info(
 ## 📊 Monitoring & Observability
 
 ### **1. OpenTelemetry Integration**
+
 ```python
 with tracer.start_as_current_span(f"{self.agent_id}.invoke") as span:
     span.set_attribute("agent_id", self.agent_id)
@@ -687,6 +723,7 @@ with tracer.start_as_current_span(f"{self.agent_id}.invoke") as span:
 ```
 
 ### **2. Structured Logging**
+
 ```python
 logger.info(
     "Financial analysis completed",
@@ -697,6 +734,7 @@ logger.info(
 ```
 
 ### **3. Health Monitoring**
+
 ```python
 @app.get("/health")
 async def health_check():
@@ -714,18 +752,20 @@ async def health_check():
 ## 🚀 Extension Points
 
 ### **1. Adding New Agents**
+
 ```python
 class MyCustomAgent(BaseAgent):
     def _build_graph(self) -> StateGraph:
         # Define agent workflow
         pass
-    
+  
     async def _process_request(self, state: AgentState) -> AgentState:
         # Implement agent logic
         pass
 ```
 
 ### **2. Adding New Tools**
+
 ```python
 class MyCustomTool(BaseTool):
     async def execute(self, parameters, context=None) -> ToolResult:
@@ -734,6 +774,7 @@ class MyCustomTool(BaseTool):
 ```
 
 ### **3. Adding New Workflows**
+
 ```python
 async def _execute_custom_workflow(self, request: str, workflow_state: WorkflowState):
     # Implement custom workflow logic
@@ -745,16 +786,19 @@ async def _execute_custom_workflow(self, request: str, workflow_state: WorkflowS
 ## 📈 Performance Considerations
 
 ### **1. Async/Await Pattern**
+
 - All I/O operations are async
 - Non-blocking database operations
 - Concurrent agent execution
 
 ### **2. Caching Strategy**
+
 - Redis for session caching
 - In-memory caching for frequently accessed data
 - Tool result caching
 
 ### **3. Resource Management**
+
 - Connection pooling for databases
 - Rate limiting for API calls
 - Memory management for large datasets
@@ -764,16 +808,19 @@ async def _execute_custom_workflow(self, request: str, workflow_state: WorkflowS
 ## 🧪 Testing Architecture
 
 ### **1. Unit Testing**
+
 - Individual component testing
 - Mock dependencies
 - Isolated agent testing
 
 ### **2. Integration Testing**
+
 - End-to-end workflow testing
 - API integration testing
 - Database integration testing
 
 ### **3. Load Testing**
+
 - Concurrent user simulation
 - Performance benchmarking
 - Stress testing
@@ -796,5 +843,5 @@ Hệ thống sử dụng các công nghệ hiện đại như FastAPI, LangChain
 
 ---
 
-*Tài liệu được tạo tự động bởi AI Assistant*  
+*Tài liệu được tạo tự động bởi Doan Ngoc Cuong - AI Assistant*
 *Cập nhật lần cuối: 13/09/2025*
