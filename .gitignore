@@ -8,3 +8,17 @@ New folder/.env
 New folder/src/__pycache__/
 
 New folder/src/ai_financial/__pycache__/
+
+New folder/src/ai_financial/core/__pycache__/
+
+New folder/src/ai_financial/mcp/__pycache__/
+
+New folder/src/ai_financial/mcp/tools/__pycache__/
+
+New folder/src/ai_financial/models/__pycache__/
+
+New folder/src/ai_financial/orchestrator/__pycache__/
+
+New folder/src/ai_financial/agents/__pycache__/
+
+New folder/src/ai_financial/agents/advisory/__pycache__/
