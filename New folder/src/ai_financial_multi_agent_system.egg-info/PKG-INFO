@@ -1,0 +1,503 @@
+Metadata-Version: 2.4
+Name: ai-financial-multi-agent-system
+Version: 0.1.0
+Summary: AI Financial Multi-Agent System for SMB accounting and financial automation
+Author-email: AI Financial Team <team@aifinancial.com>
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Financial and Insurance Industry
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: langchain>=0.1.0
+Requires-Dist: langchain-openai>=0.1.0
+Requires-Dist: langchain-community>=0.0.20
+Requires-Dist: langgraph>=0.0.30
+Requires-Dist: fastapi>=0.104.0
+Requires-Dist: uvicorn[standard]>=0.24.0
+Requires-Dist: websockets>=12.0
+Requires-Dist: sqlalchemy>=2.0.0
+Requires-Dist: alembic>=1.13.0
+Requires-Dist: asyncpg>=0.29.0
+Requires-Dist: motor>=3.3.0
+Requires-Dist: redis>=5.0.0
+Requires-Dist: pydantic>=2.5.0
+Requires-Dist: pydantic-settings>=2.1.0
+Requires-Dist: asyncio-mqtt>=0.16.0
+Requires-Dist: celery>=5.3.0
+Requires-Dist: kombu>=5.3.0
+Requires-Dist: opentelemetry-api>=1.21.0
+Requires-Dist: opentelemetry-sdk>=1.21.0
+Requires-Dist: opentelemetry-instrumentation-fastapi>=0.42b0
+Requires-Dist: opentelemetry-instrumentation-sqlalchemy>=0.42b0
+Requires-Dist: opentelemetry-exporter-otlp>=1.21.0
+Requires-Dist: langfuse>=2.0.0
+Requires-Dist: python-jose[cryptography]>=3.3.0
+Requires-Dist: passlib[bcrypt]>=1.7.4
+Requires-Dist: python-multipart>=0.0.6
+Requires-Dist: pandas>=2.1.0
+Requires-Dist: numpy>=1.24.0
+Requires-Dist: scikit-learn>=1.3.0
+Requires-Dist: pytesseract>=0.3.10
+Requires-Dist: Pillow>=10.0.0
+Requires-Dist: httpx>=0.25.0
+Requires-Dist: aiofiles>=23.2.0
+Requires-Dist: python-dotenv>=1.0.0
+Requires-Dist: click>=8.1.0
+Requires-Dist: structlog>=23.2.0
+Requires-Dist: rich>=13.7.0
+Requires-Dist: typer>=0.9.0
+Provides-Extra: dev
+Requires-Dist: pytest>=7.4.0; extra == "dev"
+Requires-Dist: pytest-asyncio>=0.21.0; extra == "dev"
+Requires-Dist: pytest-cov>=4.1.0; extra == "dev"
+Requires-Dist: pytest-mock>=3.12.0; extra == "dev"
+Requires-Dist: black>=23.9.0; extra == "dev"
+Requires-Dist: isort>=5.12.0; extra == "dev"
+Requires-Dist: flake8>=6.1.0; extra == "dev"
+Requires-Dist: mypy>=1.6.0; extra == "dev"
+Requires-Dist: pre-commit>=3.5.0; extra == "dev"
+Provides-Extra: test
+Requires-Dist: pytest>=7.4.0; extra == "test"
+Requires-Dist: pytest-asyncio>=0.21.0; extra == "test"
+Requires-Dist: pytest-cov>=4.1.0; extra == "test"
+Requires-Dist: pytest-mock>=3.12.0; extra == "test"
+Requires-Dist: httpx>=0.25.0; extra == "test"
+Requires-Dist: factory-boy>=3.3.0; extra == "test"
+Provides-Extra: docs
+Requires-Dist: mkdocs>=1.5.0; extra == "docs"
+Requires-Dist: mkdocs-material>=9.4.0; extra == "docs"
+Requires-Dist: mkdocstrings[python]>=0.24.0; extra == "docs"
+
+# AI Financial Multi-Agent System
+
+A comprehensive financial automation platform for SMBs using LangChain and LangGraph, providing two main workflows: Advisory services for CEOs and Transactional automation for accounting processes.
+
+## Features
+
+### Advisory Context (CEO Support)
+- **AI CFO Agent**: Industry-specific financial advisory and analysis
+- **Forecasting Agent**: 13-week cash flow and 12-month P&L projections
+- **Alert Agent**: Proactive risk and opportunity detection
+- **Reporting Agent**: Executive briefings and board-ready reports
+
+### Transactional Context (Automation)
+- **OCR Processing Agent**: Receipt and invoice processing
+- **Data Sync Agent**: Multi-source data integration and synchronization
+- **Accounting Automation Agent**: Automated journal entries and processing
+- **Reconciliation Agent**: Bank statement reconciliation
+- **Compliance Agent**: Regulatory compliance and audit support
+
+### Core Infrastructure
+- **Agent Orchestrator**: Central coordination of multi-agent workflows
+- **MCP Tool Hub**: Centralized tool repository following MCP standards
+- **Workflow Engine**: Complex workflow management with HITL controls
+- **Context Manager**: Agent execution context and state management
+
+## Quick Start
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd ai-financial-multi-agent-system/src
+
+# Install dependencies
+pip install -e .
+
+# Or install with development dependencies
+pip install -e ".[dev]"
+```
+
+### Configuration
+
+Create a `.env` file in the src directory:
+
+```env
+# OpenAI Configuration
+OPENAI_API_KEY=your_openai_api_key_here
+OPENAI_MODEL=gpt-4-turbo-preview
+
+# Database Configuration
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=ai_financial
+POSTGRES_PASSWORD=your_password
+POSTGRES_DB=ai_financial
+
+# Redis Configuration
+REDIS_URL=redis://localhost:6379
+
+# Security
+SECRET_KEY=your_secret_key_here_at_least_32_characters_long
+
+# Monitoring
+LANGFUSE_SECRET_KEY=your_langfuse_secret_key
+LANGFUSE_PUBLIC_KEY=your_langfuse_public_key
+```
+
+### Running the System
+
+#### Option 1: CLI Interface
+
+```bash
+# Start the server
+ai-financial start
+
+# Interactive chat
+ai-financial chat
+
+# Chat with specific agent
+ai-financial chat --agent ai_cfo_agent
+
+# Execute workflow
+ai-financial chat --workflow advisory
+
+# Check system status
+ai-financial status
+
+# List available agents
+ai-financial agents
+
+# List available tools
+ai-financial tools
+
+# Test a tool
+ai-financial test-tool financial_ratio_calculator --params '{"ratio_type": "current_ratio", "financial_data": {"current_assets": 100000, "current_liabilities": 50000}}'
+```
+
+#### Option 2: Python API
+
+```python
+import asyncio
+from ai_financial.orchestrator.orchestrator import get_orchestrator
+from ai_financial.agents.advisory.ai_cfo_agent import AICFOAgent
+
+async def main():
+    # Initialize system
+    orchestrator = get_orchestrator()
+    
+    # Register agents
+    ai_cfo = AICFOAgent(industry="healthcare")
+    orchestrator.register_agent(ai_cfo)
+    
+    # Start system
+    await orchestrator.start()
+    
+    # Execute request
+    result = await orchestrator.route_request(
+        request="Analyze our company's financial health",
+        workflow_type="advisory"
+    )
+    
+    print(result)
+    
+    # Stop system
+    await orchestrator.stop()
+
+asyncio.run(main())
+```
+
+#### Option 3: REST API
+
+```bash
+# Start the server
+python -m ai_financial.main
+
+# Or using uvicorn directly
+uvicorn ai_financial.main:app --host 0.0.0.0 --port 8000
+```
+
+Then use the REST API:
+
+```bash
+# Health check
+curl http://localhost:8000/health
+
+# Invoke AI CFO agent
+curl -X POST http://localhost:8000/api/v1/agents/ai_cfo_agent/invoke \
+  -H "Content-Type: application/json" \
+  -d '{"message": "What is our current financial position?"}'
+
+# Execute advisory workflow
+curl -X POST http://localhost:8000/api/v1/workflows/advisory/execute \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Provide comprehensive financial analysis"}'
+
+# Stream workflow execution
+curl http://localhost:8000/api/v1/workflows/advisory/stream?message=analyze
+
+# List available tools
+curl http://localhost:8000/api/v1/tools
+
+# Execute a tool
+curl -X POST http://localhost:8000/api/v1/tools/financial_ratio_calculator/execute \
+  -H "Content-Type: application/json" \
+  -d '{
+    "parameters": {
+      "ratio_type": "current_ratio",
+      "financial_data": {
+        "current_assets": 100000,
+        "current_liabilities": 50000
+      }
+    }
+  }'
+```
+
+## Architecture
+
+### System Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    External Systems                          │
+│  ERP │ POS │ Banking APIs │ Accounting Software │ Industry   │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────┐
+│                   API Gateway Layer                         │
+│              Authentication & Authorization                  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────┐
+│                 Agent Orchestrator                          │
+│  ┌─────────────────────┐  ┌─────────────────────────────┐   │
+│  │  Advisory Context   │  │  Transactional Context      │   │
+│  │  • AI CFO Agent     │  │  • OCR Processing Agent     │   │
+│  │  • Forecasting      │  │  • Data Sync Agent          │   │
+│  │  • Alert Agent      │  │  • Accounting Agent         │   │
+│  │  • Reporting Agent  │  │  • Reconciliation Agent     │   │
+│  │                     │  │  • Compliance Agent         │   │
+│  └─────────────────────┘  └─────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────┐
+│                    Core Services                            │
+│    MCP Tool Hub │ Workflow Engine │ HITL Service            │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────┐
+│                     Data Layer                              │
+│  Unified Data Lake │ Policy DB │ Audit DB │ Redis Cache     │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────┐
+│              Monitoring & Observability                     │
+│     Langfuse │ OpenTelemetry │ Metrics │ Alerts             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Key Components
+
+1. **Agent Orchestrator**: Central coordination of all agents and workflows
+2. **MCP Tool Hub**: Centralized tool repository following MCP standards
+3. **Workflow Engine**: Manages complex multi-step workflows with approvals
+4. **Context Manager**: Handles agent execution contexts and shared state
+5. **Base Agent**: Foundation class for all AI agents with LangGraph integration
+
+### Workflows
+
+#### Advisory Workflow (CEO Support)
+```
+Data Sync → Financial Analysis → Forecasting → Risk Assessment → Executive Reporting
+```
+
+#### Transactional Workflow (Automation)
+```
+OCR/Ingest → Standardization → Accounting Entries → Reconciliation → Compliance Audit
+```
+
+## Development
+
+### Project Structure
+
+```
+src/
+├── ai_financial/
+│   ├── __init__.py
+│   ├── main.py                 # FastAPI application
+│   ├── cli.py                  # Command-line interface
+│   ├── core/                   # Core infrastructure
+│   │   ├── base_agent.py       # Base agent class
+│   │   ├── config.py           # Configuration management
+│   │   └── logging.py          # Logging and tracing
+│   ├── models/                 # Data models
+│   │   ├── agent_models.py     # Agent-related models
+│   │   └── financial_models.py # Financial data models
+│   ├── agents/                 # AI agents
+│   │   ├── advisory/           # Advisory context agents
+│   │   └── transactional/      # Transactional context agents
+│   ├── mcp/                    # MCP integration
+│   │   ├── server.py           # MCP server implementation
+│   │   ├── hub.py              # Tool hub
+│   │   └── tools/              # MCP tools
+│   └── orchestrator/           # Orchestration layer
+│       ├── orchestrator.py     # Main orchestrator
+│       ├── workflow_engine.py  # Workflow management
+│       └── context_manager.py  # Context management
+├── tests/                      # Test suite
+├── pyproject.toml             # Project configuration
+└── README.md                  # This file
+```
+
+### Adding New Agents
+
+1. Create agent class inheriting from `BaseAgent`
+2. Implement required methods (`_build_graph`, `_process_request`)
+3. Register with orchestrator
+
+```python
+from ai_financial.core.base_agent import BaseAgent
+from langgraph.graph import StateGraph, END
+
+class MyCustomAgent(BaseAgent):
+    def __init__(self):
+        super().__init__(
+            agent_id="my_custom_agent",
+            name="My Custom Agent",
+            description="Custom agent for specific tasks"
+        )
+    
+    def _build_graph(self) -> StateGraph:
+        graph = StateGraph(AgentState)
+        graph.add_node("process", self._process_request)
+        graph.set_entry_point("process")
+        graph.add_edge("process", END)
+        return graph
+    
+    async def _process_request(self, state: AgentState) -> AgentState:
+        # Implement your agent logic here
+        pass
+```
+
+### Adding New Tools
+
+1. Create tool class inheriting from `BaseTool`
+2. Implement required methods (`execute`, `get_parameters_schema`)
+3. Register with tool hub
+
+```python
+from ai_financial.mcp.tools.base_tool import BaseTool, ToolResult
+
+class MyCustomTool(BaseTool):
+    def __init__(self):
+        super().__init__(
+            name="my_custom_tool",
+            description="Custom tool for specific calculations",
+            category="calculation"
+        )
+    
+    async def execute(self, parameters, context=None) -> ToolResult:
+        # Implement your tool logic here
+        return ToolResult(success=True, data={"result": "success"})
+    
+    def get_parameters_schema(self):
+        return {
+            "type": "object",
+            "properties": {
+                "input": {"type": "string", "description": "Input parameter"}
+            },
+            "required": ["input"]
+        }
+```
+
+### Testing
+
+```bash
+# Run all tests
+pytest
+
+# Run with coverage
+pytest --cov=ai_financial
+
+# Run specific test file
+pytest tests/test_agents.py
+
+# Run integration tests
+pytest tests/integration/
+```
+
+### Code Quality
+
+```bash
+# Format code
+black src/
+
+# Sort imports
+isort src/
+
+# Lint code
+flake8 src/
+
+# Type checking
+mypy src/
+```
+
+## Configuration
+
+### Environment Variables
+
+See `ai_financial/core/config.py` for all available configuration options.
+
+Key settings:
+- `OPENAI_API_KEY`: OpenAI API key for LLM access
+- `POSTGRES_*`: Database connection settings
+- `REDIS_URL`: Redis connection for caching
+- `SECRET_KEY`: Security key for JWT tokens
+- `LANGFUSE_*`: Monitoring and observability settings
+
+### Industry Specialization
+
+The AI CFO agent supports industry-specific analysis:
+
+```python
+# Healthcare industry
+ai_cfo = AICFOAgent(industry="healthcare")
+
+# Automotive industry  
+ai_cfo = AICFOAgent(industry="automotive")
+
+# Pharmaceutical industry
+ai_cfo = AICFOAgent(industry="pharmaceutical")
+```
+
+## Monitoring and Observability
+
+The system includes comprehensive monitoring:
+
+- **OpenTelemetry**: Distributed tracing across all services
+- **Langfuse**: LLM interaction monitoring and token usage tracking
+- **Structured Logging**: JSON-formatted logs with correlation IDs
+- **Metrics Collection**: Performance and usage metrics
+- **Health Checks**: System health monitoring endpoints
+
+## Security
+
+- **Authentication**: OAuth 2.0 with JWT tokens
+- **Authorization**: Role-based access control
+- **Data Encryption**: AES-256 at rest, TLS 1.3 in transit
+- **Audit Logging**: Immutable audit trails with digital signatures
+- **Secrets Management**: Environment-based configuration
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Run quality checks
+6. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For support and questions:
+- Create an issue in the repository
+- Check the documentation
+- Review the test cases for usage examples

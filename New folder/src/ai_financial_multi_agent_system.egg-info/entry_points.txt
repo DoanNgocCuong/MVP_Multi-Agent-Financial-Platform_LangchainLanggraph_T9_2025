@@ -1,0 +1,2 @@
+[console_scripts]
+ai-financial = ai_financial.cli:main
