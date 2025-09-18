@@ -22,3 +22,11 @@ New folder/src/ai_financial/orchestrator/__pycache__/
 New folder/src/ai_financial/agents/__pycache__/
 
 New folder/src/ai_financial/agents/advisory/__pycache__/
+
+deploy/src/ai_financial/__pycache__/
+
+deploy/src/ai_financial/core/__pycache__/
+
+deploy/src/ai_financial/mcp/__pycache__/
+
+deploy/src/ai_financial/models/__pycache__/

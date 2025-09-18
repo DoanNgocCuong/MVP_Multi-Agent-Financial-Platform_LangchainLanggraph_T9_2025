@@ -57,6 +57,10 @@ def setup_logging() -> None:
 def setup_tracing() -> None:
     """Set up OpenTelemetry tracing."""
     
+    # Check if tracer provider is already set to avoid override
+    if trace.get_tracer_provider() is not None and hasattr(trace.get_tracer_provider(), '_resource'):
+        return
+    
     # Create resource
     resource = Resource.create({
         "service.name": settings.monitoring.otel_service_name,

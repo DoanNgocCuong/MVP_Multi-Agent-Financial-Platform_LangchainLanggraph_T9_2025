@@ -110,7 +110,7 @@ class Transaction(BaseModel):
         return v
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "amount": "1500.00",
                 "currency": "USD",
@@ -144,7 +144,7 @@ class Account(BaseModel):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "name": "Cash - Operating Account",
                 "code": "1001",
@@ -253,7 +253,7 @@ class Forecast(BaseModel):
         return v
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "type": "cash_flow",
                 "period_start": "2024-01-01T00:00:00Z",
@@ -284,7 +284,7 @@ class ExternalSystem(BaseModel):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "name": "QuickBooks Online",
                 "type": "accounting",
@@ -340,7 +340,7 @@ class DataMapping(BaseModel):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "source_system": "quickbooks",
                 "target_system": "internal",

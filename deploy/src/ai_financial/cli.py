@@ -46,7 +46,7 @@ def start(
     ))
     
     uvicorn.run(
-        fastapi_app,
+        "ai_financial.main:app",
         host=host,
         port=port,
         reload=reload,

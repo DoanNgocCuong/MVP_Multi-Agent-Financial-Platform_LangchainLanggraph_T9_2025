@@ -24,7 +24,7 @@ class ToolResult(BaseModel):
     timestamp: datetime = Field(default_factory=datetime.utcnow)
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "success": True,
                 "data": {"result": 1.5, "ratio_type": "current_ratio"},

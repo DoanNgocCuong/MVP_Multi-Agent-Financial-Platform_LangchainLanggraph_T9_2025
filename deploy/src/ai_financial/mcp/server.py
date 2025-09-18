@@ -27,7 +27,7 @@ class MCPToolDefinition(BaseModel):
     version: str = Field(default="1.0.0", description="Tool version")
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "name": "calculate_financial_ratio",
                 "description": "Calculate financial ratios from provided data",

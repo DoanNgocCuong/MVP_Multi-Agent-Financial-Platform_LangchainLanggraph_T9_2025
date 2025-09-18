@@ -186,7 +186,7 @@ class AgentCapability(BaseModel):
     required_permissions: List[str] = Field(default_factory=list, description="Required permissions")
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "name": "financial_analysis",
                 "description": "Analyze financial data and generate insights",
