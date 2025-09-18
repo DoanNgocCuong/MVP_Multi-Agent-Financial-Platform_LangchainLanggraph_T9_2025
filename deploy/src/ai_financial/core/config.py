@@ -79,7 +79,7 @@ class MonitoringSettings(BaseSettings):
     
     # OpenTelemetry settings
     otel_service_name: str = Field(default="ai-financial-system", env="OTEL_SERVICE_NAME")
-    otel_exporter_otlp_endpoint: str = Field(default="http://localhost:4317", env="OTEL_EXPORTER_OTLP_ENDPOINT")
+    otel_exporter_otlp_endpoint: str = Field(default="", env="OTEL_EXPORTER_OTLP_ENDPOINT")
     otel_exporter_otlp_headers: str = Field(default="", env="OTEL_EXPORTER_OTLP_HEADERS")
     
     # Logging settings

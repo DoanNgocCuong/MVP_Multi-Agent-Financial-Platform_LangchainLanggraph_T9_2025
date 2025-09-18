@@ -9,7 +9,8 @@ from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.sdk.trace.export import BatchSpanProcessor, SimpleSpanProcessor
+from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 
 try:
     from opentelemetry.instrumentation.logging import LoggingInstrumentor
@@ -72,7 +73,7 @@ def setup_tracing() -> None:
     tracer_provider = TracerProvider(resource=resource)
     trace.set_tracer_provider(tracer_provider)
     
-    # Set up OTLP exporter
+    # Set up OTLP exporter (only when explicitly configured)
     if settings.monitoring.otel_exporter_otlp_endpoint:
         otlp_exporter = OTLPSpanExporter(
             endpoint=settings.monitoring.otel_exporter_otlp_endpoint,
@@ -82,6 +83,12 @@ def setup_tracing() -> None:
         # Add span processor
         span_processor = BatchSpanProcessor(otlp_exporter)
         tracer_provider.add_span_processor(span_processor)
+    else:
+        # In development, use console exporter to see traces in logs
+        if settings.is_development():
+            console_exporter = ConsoleSpanExporter()
+            console_processor = SimpleSpanProcessor(console_exporter)
+            tracer_provider.add_span_processor(console_processor)
     
     # Instrument logging if available
     if LOGGING_INSTRUMENTATION_AVAILABLE:

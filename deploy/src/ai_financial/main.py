@@ -243,6 +243,30 @@ async def get_system_status():
     }
 
 
+@app.get("/api/v1/trace-test")
+async def trace_test():
+    """Test endpoint to demonstrate tracing."""
+    from ai_financial.core.logging import get_tracer
+    
+    tracer = get_tracer(__name__)
+    
+    with tracer.start_as_current_span("trace_test_span") as span:
+        span.set_attribute("test.type", "demo")
+        span.set_attribute("test.message", "This is a test trace")
+        
+        # Simulate some work
+        import asyncio
+        await asyncio.sleep(0.1)
+        
+        span.add_event("work_completed", {"duration": 0.1})
+        
+        return {
+            "message": "Trace test completed",
+            "trace_id": format(span.get_span_context().trace_id, '032x'),
+            "span_id": format(span.get_span_context().span_id, '016x'),
+        }
+
+
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
     return app
