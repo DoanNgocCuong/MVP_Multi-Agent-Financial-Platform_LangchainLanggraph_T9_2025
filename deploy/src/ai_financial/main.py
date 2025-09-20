@@ -124,8 +124,18 @@ async def invoke_agent(
     orchestrator = get_orchestrator()
     
     try:
+        # Extract message and context from request
+        message = request.get("message", "")
+        context_data = request.get("context", {})
+        
+        # Create enhanced request with context
+        enhanced_request = {
+            "message": message,
+            "context": context_data
+        }
+        
         result = await orchestrator.route_request(
-            request=request.get("message", ""),
+            request=enhanced_request,
             preferred_agent=agent_id,
         )
         

@@ -1,10 +1,10 @@
 """AI CFO Agent for industry-specific financial advisory and analysis."""
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 from decimal import Decimal
 from datetime import datetime, timedelta
 
-from langchain.schema import AIMessage, HumanMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langgraph.graph import StateGraph, END
 
 from ai_financial.core.base_agent import BaseAgent
@@ -404,14 +404,28 @@ Prioritize recommendations by impact and feasibility.
                 state.error = f"Recommendation generation failed: {str(e)}"
                 return state
     
-    async def _format_response(self, state: AgentState) -> AgentState:
+    async def _format_response(self, state: Union[AgentState, Dict[str, Any]]) -> Dict[str, Any]:
         """Format the final CFO response."""
         with tracer.start_as_current_span("ai_cfo.format_response"):
             try:
+                # Handle both AgentState and dict
+                if isinstance(state, dict):
+                    metadata = state.get("metadata", {})
+                    context = state.get("context")
+                    completed_steps = state.get("completed_steps", [])
+                    error = state.get("error")
+                    messages = state.get("messages", [])
+                else:
+                    metadata = state.metadata
+                    context = state.context
+                    completed_steps = state.completed_steps
+                    error = state.error
+                    messages = state.messages
+                
                 # Compile comprehensive CFO report
-                insights = state.metadata.get("insights", "")
-                risk_summary = state.metadata.get("risk_assessment", {}).get("risk_summary", "")
-                recommendations = state.metadata.get("recommendations", "")
+                insights = metadata.get("insights", "")
+                risk_summary = metadata.get("risk_assessment", {}).get("risk_summary", "")
+                recommendations = metadata.get("recommendations", "")
                 
                 final_response = f"""# AI CFO Financial Analysis Report
 
@@ -433,10 +447,7 @@ This analysis is tailored for the {self.industry} industry, incorporating releva
 """
                 
                 # Add final response to messages
-                state.messages.append(AIMessage(content=final_response))
-                
-                state.completed_steps.append("format_response")
-                state.current_step = "completed"
+                # Skip modifying state since we're returning dict
                 
                 logger.info(
                     "CFO analysis completed",
@@ -444,12 +455,25 @@ This analysis is tailored for the {self.industry} industry, incorporating releva
                     report_length=len(final_response),
                 )
                 
-                return state
+                return {
+                    "agent_id": self.agent_id,
+                    "session_id": getattr(context, 'session_id', None) if context else None,
+                    "response": final_response,
+                    "metadata": metadata,
+                    "completed_steps": completed_steps + ["format_response"],
+                    "error": error,
+                }
                 
             except Exception as e:
                 logger.error("Response formatting failed", error=str(e))
-                state.error = f"Response formatting failed: {str(e)}"
-                return state
+                return {
+                    "agent_id": self.agent_id,
+                    "session_id": getattr(state.context, 'session_id', None) if getattr(state, 'context', None) else None,
+                    "response": "Error occurred during analysis",
+                    "metadata": getattr(state, 'metadata', {}),
+                    "completed_steps": getattr(state, 'completed_steps', []),
+                    "error": f"Response formatting failed: {str(e)}",
+                }
     
     def _load_industry_metrics(self) -> Dict[str, Any]:
         """Load industry-specific metrics and KPIs."""

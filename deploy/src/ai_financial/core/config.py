@@ -44,6 +44,11 @@ class LLMSettings(BaseSettings):
     langfuse_public_key: str = Field(default="", env="LANGFUSE_PUBLIC_KEY")
     langfuse_host: str = Field(default="https://cloud.langfuse.com", env="LANGFUSE_HOST")
     
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+        extra = "ignore"
+    
     @property
     def has_openai_key(self) -> bool:
         """Check if OpenAI API key is configured."""

@@ -5,8 +5,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, Type, TypeVar, Union
 from uuid import uuid4
 
-from langchain.schema import BaseMessage, HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from langgraph.graph import StateGraph, END
 from langgraph.graph.message import add_messages
 from pydantic import BaseModel, Field
@@ -47,19 +46,40 @@ class BaseAgent(ABC):
         self.name = name
         self.description = description
         
-        # Initialize LLM
+        # Initialize LLM (lazy import to avoid heavy deps during startup)
         if settings.llm.has_openai_key:
-            self.llm = ChatOpenAI(
-                model=llm_model or settings.llm.openai_model,
-                temperature=temperature or settings.llm.openai_temperature,
-                max_tokens=max_tokens or settings.llm.openai_max_tokens,
-                openai_api_key=settings.llm.openai_api_key,
-            )
+            try:
+                from langchain_openai import ChatOpenAI  # Lazy import
+
+                self.llm = ChatOpenAI(
+                    model=llm_model or settings.llm.openai_model,
+                    temperature=temperature or settings.llm.openai_temperature,
+                    max_tokens=max_tokens or settings.llm.openai_max_tokens,
+                    openai_api_key=settings.llm.openai_api_key,
+                )
+            except Exception as e:
+                # Fallback to mock LLM if provider import/init fails
+                from unittest.mock import AsyncMock
+                self.llm = AsyncMock()
+                self.llm.model_name = llm_model or settings.llm.openai_model
+                logger.warning(
+                    "Failed to initialize OpenAI client, using mock LLM",
+                    agent_id=self.agent_id,
+                    error=str(e),
+                )
         else:
-            # Mock LLM for development/demo mode
-            from unittest.mock import AsyncMock
-            self.llm = AsyncMock()
-            self.llm.model_name = llm_model or settings.llm.openai_model
+            # Mock LLM for development/demo mode with ainvoke returning AIMessage-like object
+            class _MockChat:
+                def __init__(self, model_name: str):
+                    self.model_name = model_name
+                async def ainvoke(self, messages: List[BaseMessage]):
+                    # Simple echo content for testing
+                    last_human = next((m for m in reversed(messages) if m.__class__.__name__ == 'HumanMessage'), None)
+                    content = f"[DEMO MODE] Simulated response from {self.model_name}. "
+                    content += (f"You asked: '{last_human.content}'" if last_human else "No user input provided.")
+                    from langchain_core.messages import AIMessage
+                    return AIMessage(content=content)
+            self.llm = _MockChat(llm_model or settings.llm.openai_model)
             logger.warning(
                 "OpenAI API key not configured, using mock LLM for development",
                 agent_id=self.agent_id,
@@ -162,7 +182,11 @@ Current context: You are operating within a secure financial system with proper 
                     trace_id=context.trace_id,
                 )
                 
-                return self._format_response(result)
+                formatted_response = self._format_response(result)
+                # Handle both sync and async _format_response methods
+                if asyncio.iscoroutine(formatted_response):
+                    return await formatted_response
+                return formatted_response
                 
             except Exception as e:
                 logger.error(
@@ -276,17 +300,29 @@ Current context: You are operating within a secure financial system with proper 
         Returns:
             Formatted response
         """
+        # Handle both AgentState and dict results
+        if isinstance(result, dict):
+            return {
+                "agent_id": self.agent_id,
+                "session_id": result.get("session_id"),
+                "response": result.get("response", "No response generated"),
+                "metadata": result.get("metadata", {}),
+                "completed_steps": result.get("completed_steps", []),
+                "error": result.get("error"),
+            }
+        
         # Get the last AI message
-        ai_messages = [msg for msg in result.messages if hasattr(msg, 'content') and msg.__class__.__name__ == 'AIMessage']
+        messages = getattr(result, 'messages', [])
+        ai_messages = [msg for msg in messages if hasattr(msg, 'content') and getattr(msg, '__class__', None) and getattr(msg.__class__, '__name__', '') == 'AIMessage']
         last_message = ai_messages[-1] if ai_messages else None
         
         return {
             "agent_id": self.agent_id,
-            "session_id": result.context.session_id if result.context else None,
-            "response": last_message.content if last_message else "No response generated",
-            "metadata": result.metadata,
-            "completed_steps": result.completed_steps,
-            "error": result.error,
+            "session_id": getattr(getattr(result, 'context', None), 'session_id', None),
+            "response": getattr(last_message, 'content', "No response generated") if last_message else "No response generated",
+            "metadata": getattr(result, 'metadata', {}),
+            "completed_steps": getattr(result, 'completed_steps', []),
+            "error": getattr(result, 'error', None),
         }
     
     def _format_stream_chunk(self, chunk: Dict[str, Any]) -> Dict[str, Any]:

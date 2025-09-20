@@ -87,6 +87,16 @@ class AgentOrchestrator:
         
         return True
     
+    async def _resolve_result(self, result: Any) -> Dict[str, Any]:
+        """Ensure an awaited, dictionary-like result for downstream usage."""
+        # Await if coroutine
+        if asyncio.iscoroutine(result):
+            result = await result
+        # Normalize non-dict results
+        if not isinstance(result, dict):
+            return {"success": True, "result": result}
+        return result
+
     async def route_request(
         self,
         request: Union[str, Dict[str, Any]],
@@ -186,15 +196,34 @@ class AgentOrchestrator:
                 
                 # Execute agent
                 result = await agent.invoke(request, context)
+                # Only resolve if result is not already a dict
+                if isinstance(result, dict):
+                    normalized = result
+                else:
+                    normalized = await self._resolve_result(result)
                 
                 logger.info(
                     "Agent request completed",
                     agent_id=agent_id,
                     session_id=context.session_id,
-                    success=result.get("error") is None,
+                    success=(normalized.get("error") is None),
                 )
                 
-                return result
+                return normalized
+                
+            except Exception as e:
+                logger.error(
+                    "Agent execution failed",
+                    agent_id=agent_id,
+                    session_id=context.session_id,
+                    error=str(e),
+                )
+                
+                return {
+                    "success": False,
+                    "error": f"Agent execution failed: {str(e)}",
+                    "session_id": context.session_id,
+                }
                 
             finally:
                 self._active_agent_count -= 1

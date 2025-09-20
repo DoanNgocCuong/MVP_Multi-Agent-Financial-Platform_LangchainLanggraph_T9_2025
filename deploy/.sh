@@ -116,3 +116,7 @@ deploy/src> python -m ai_financial.cli start --reload
 
 $ docker ps | findstr jaeger
 $ netstat -an | findstr :16686
+
+---
+
+

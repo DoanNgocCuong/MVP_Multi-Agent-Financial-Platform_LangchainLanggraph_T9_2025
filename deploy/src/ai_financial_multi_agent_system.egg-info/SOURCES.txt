@@ -29,6 +29,7 @@ ai_financial/orchestrator/context_manager.py
 ai_financial/orchestrator/orchestrator.py
 ai_financial/orchestrator/workflow_engine.py
 ai_financial_multi_agent_system.egg-info/PKG-INFO
+ai_financial_multi_agent_system.egg-info/README.md
 ai_financial_multi_agent_system.egg-info/SOURCES.txt
 ai_financial_multi_agent_system.egg-info/dependency_links.txt
 ai_financial_multi_agent_system.egg-info/entry_points.txt
