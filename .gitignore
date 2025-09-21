@@ -44,3 +44,5 @@ deploy/src/ai_financial/agents/processing/__pycache__/
 deploy/src/ai_financial/agents/monitoring/__pycache__/
 
 deploy/src/ai_financial/agents/reporting/__pycache__/
+
+deploy/.langgraph_api/
