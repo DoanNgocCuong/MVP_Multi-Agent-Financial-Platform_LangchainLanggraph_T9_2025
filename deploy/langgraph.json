@@ -1,0 +1,7 @@
+{
+  "dependencies": ["src"],
+  "graphs": {
+    "ai_cfo_agent": "src/ai_financial/agents/advisory/ai_cfo_agent.py:ai_cfo_agent"
+  },
+  "env": ".env"
+}

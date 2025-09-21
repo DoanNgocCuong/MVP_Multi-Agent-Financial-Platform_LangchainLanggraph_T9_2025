@@ -30,3 +30,7 @@ deploy/src/ai_financial/core/__pycache__/
 deploy/src/ai_financial/mcp/__pycache__/
 
 deploy/src/ai_financial/models/__pycache__/
+
+deploy/src/ai_financial/agents/advisory/__pycache__/
+
+deploy/src/ai_financial/agents/advisory/.langgraph_api/
