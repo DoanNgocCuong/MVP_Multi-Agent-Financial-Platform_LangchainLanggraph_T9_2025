@@ -1,10 +1,21 @@
 """Configuration management for the AI Financial Multi-Agent System."""
 
 import os
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from pydantic import Field, validator
 from pydantic_settings import BaseSettings
+from dotenv import load_dotenv
+
+# Load .env file from project root
+project_root = Path(__file__).parent.parent.parent.parent
+env_file = project_root / ".env"
+if env_file.exists():
+    load_dotenv(env_file)
+    print(f"✅ Loaded .env file from: {env_file}")
+else:
+    print(f"⚠️  .env file not found at: {env_file}")
 
 
 class DatabaseSettings(BaseSettings):
@@ -109,7 +120,7 @@ class MCPSettings(BaseSettings):
         "calculation_tools",
         "integration_tools",
         "communication_tools"
-    ], env="ENABLED_TOOLS")
+    ])
 
 
 class ExternalIntegrationSettings(BaseSettings):

@@ -175,6 +175,15 @@ class AICFOAgent(BaseAgent):
             api_key=settings.llm.openai_api_key
         )
     
+    def _get_langfuse_handler(self):
+        """Get LangFuse callback handler."""
+        try:
+            from langfuse.langchain import CallbackHandler
+            return CallbackHandler()
+        except ImportError:
+            logger.warning("LangFuse not installed - tracing disabled")
+            return None
+    
     def _get_mock_llm(self):
         """Get mock LLM for demo mode."""
         from langchain_core.messages import AIMessage
@@ -541,8 +550,12 @@ Respond with a JSON object containing:
                 current_step="start"
             )
             
-            # Run the workflow
-            result = await self.compiled_graph.ainvoke(initial_state)
+            # Get LangFuse callback handler
+            langfuse_handler = self._get_langfuse_handler()
+            config = {"callbacks": [langfuse_handler]} if langfuse_handler else {}
+            
+            # Run the workflow with LangFuse tracing
+            result = await self.compiled_graph.ainvoke(initial_state, config=config)
             
             # Format response
             response = await self._format_response(result)

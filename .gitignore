@@ -34,3 +34,13 @@ deploy/src/ai_financial/models/__pycache__/
 deploy/src/ai_financial/agents/advisory/__pycache__/
 
 deploy/src/ai_financial/agents/advisory/.langgraph_api/
+
+deploy/src/ai_financial/orchestrator/__pycache__/
+
+deploy/src/ai_financial/agents/predictive/__pycache__/
+
+deploy/src/ai_financial/agents/processing/__pycache__/
+
+deploy/src/ai_financial/agents/monitoring/__pycache__/
+
+deploy/src/ai_financial/agents/reporting/__pycache__/

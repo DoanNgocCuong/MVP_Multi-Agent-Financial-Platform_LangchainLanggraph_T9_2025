@@ -702,6 +702,191 @@ class AgentOrchestrator:
             registered_agents=len(self.agents),
         )
     
+    async def stream_intelligent_routing(
+        self,
+        request: Union[str, Dict[str, Any]],
+        context: Optional[AgentContext] = None,
+    ):
+        """Stream intelligent routing execution for real-time updates.
+        
+        Args:
+            request: Request to analyze and route
+            context: Execution context
+            
+        Yields:
+            Streaming routing updates
+        """
+        with tracer.start_as_current_span("orchestrator.stream_intelligent_routing"):
+            # Create context if not provided
+            if context is None:
+                context = AgentContext(
+                    agent_id="orchestrator",
+                    session_id=str(uuid4()),
+                    user_id="system",
+                    company_id="default",
+                    permissions=[],
+                    state={},
+                )
+            
+            try:
+                # Yield initial analysis
+                yield {
+                    "type": "analysis_started",
+                    "timestamp": datetime.utcnow().isoformat(),
+                    "message": "Analyzing request for intelligent routing..."
+                }
+                
+                # Analyze request to determine routing
+                request_str = str(request) if not isinstance(request, str) else request
+                request_lower = request_str.lower()
+                
+                # Determine routing decision
+                routing_decision = None
+                confidence = 0.0
+                
+                # Simple keyword-based routing (same logic as _intelligent_routing)
+                if any(keyword in request_lower for keyword in [
+                    "forecast", "predict", "projection", "trend", "future"
+                ]):
+                    routing_decision = "forecasting_agent"
+                    confidence = 0.9
+                    yield {
+                        "type": "routing_analysis",
+                        "decision": routing_decision,
+                        "confidence": confidence,
+                        "reason": "Forecasting keywords detected",
+                        "keywords": [kw for kw in ["forecast", "predict", "projection", "trend", "future"] if kw in request_lower],
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                
+                elif any(keyword in request_lower for keyword in [
+                    "alert", "warning", "risk", "threshold", "monitor"
+                ]):
+                    routing_decision = "alert_agent"
+                    confidence = 0.9
+                    yield {
+                        "type": "routing_analysis",
+                        "decision": routing_decision,
+                        "confidence": confidence,
+                        "reason": "Alert/monitoring keywords detected",
+                        "keywords": [kw for kw in ["alert", "warning", "risk", "threshold", "monitor"] if kw in request_lower],
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                
+                elif any(keyword in request_lower for keyword in [
+                    "report", "summary", "brief", "dashboard", "analysis"
+                ]):
+                    routing_decision = "reporting_agent"
+                    confidence = 0.8
+                    yield {
+                        "type": "routing_analysis",
+                        "decision": routing_decision,
+                        "confidence": confidence,
+                        "reason": "Reporting keywords detected",
+                        "keywords": [kw for kw in ["report", "summary", "brief", "dashboard", "analysis"] if kw in request_lower],
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                
+                elif any(keyword in request_lower for keyword in [
+                    "ocr", "scan", "receipt", "invoice", "document"
+                ]):
+                    routing_decision = "ocr_agent"
+                    confidence = 0.9
+                    yield {
+                        "type": "routing_analysis",
+                        "decision": routing_decision,
+                        "confidence": confidence,
+                        "reason": "Document processing keywords detected",
+                        "keywords": [kw for kw in ["ocr", "scan", "receipt", "invoice", "document"] if kw in request_lower],
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                
+                elif any(keyword in request_lower for keyword in [
+                    "sync", "integration", "import", "export", "data"
+                ]):
+                    routing_decision = "data_sync_agent"
+                    confidence = 0.8
+                    yield {
+                        "type": "routing_analysis",
+                        "decision": routing_decision,
+                        "confidence": confidence,
+                        "reason": "Data management keywords detected",
+                        "keywords": [kw for kw in ["sync", "integration", "import", "export", "data"] if kw in request_lower],
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                
+                elif any(keyword in request_lower for keyword in [
+                    "reconcile", "match", "balance", "statement"
+                ]):
+                    routing_decision = "reconciliation_agent"
+                    confidence = 0.9
+                    yield {
+                        "type": "routing_analysis",
+                        "decision": routing_decision,
+                        "confidence": confidence,
+                        "reason": "Reconciliation keywords detected",
+                        "keywords": [kw for kw in ["reconcile", "match", "balance", "statement"] if kw in request_lower],
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                
+                else:
+                    # Default to AI CFO for general financial queries
+                    routing_decision = "ai_cfo_agent"
+                    confidence = 0.7
+                    yield {
+                        "type": "routing_analysis",
+                        "decision": routing_decision,
+                        "confidence": confidence,
+                        "reason": "No specific keywords found, defaulting to AI CFO for general financial queries",
+                        "keywords": [],
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                
+                # Yield routing decision
+                yield {
+                    "type": "routing_decision",
+                    "selected_agent": routing_decision,
+                    "confidence": confidence,
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+                
+                # Execute the selected agent
+                yield {
+                    "type": "execution_started",
+                    "agent": routing_decision,
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+                
+                # Route to the selected agent
+                result = await self._route_to_agent(routing_decision, request, context)
+                
+                # Yield execution result
+                yield {
+                    "type": "execution_completed",
+                    "agent": routing_decision,
+                    "success": result.get("success", False),
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+                
+                # Yield final result
+                yield {
+                    "type": "final_result",
+                    "result": result,
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+                
+            except Exception as e:
+                logger.error(
+                    "Intelligent routing streaming failed",
+                    error=str(e),
+                )
+                
+                yield {
+                    "type": "error",
+                    "error": f"Intelligent routing streaming failed: {str(e)}",
+                    "timestamp": datetime.utcnow().isoformat(),
+                }
+    
     async def stop(self) -> None:
         """Stop the orchestrator."""
         if not self._running:

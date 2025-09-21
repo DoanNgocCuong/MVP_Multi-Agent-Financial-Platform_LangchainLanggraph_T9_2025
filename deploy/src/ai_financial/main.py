@@ -14,6 +14,12 @@ from ai_financial.core.logging import get_logger, setup_logging, setup_tracing
 from ai_financial.orchestrator.orchestrator import get_orchestrator
 from ai_financial.mcp.hub import get_tool_hub
 from ai_financial.agents.advisory.ai_cfo_agent import AICFOAgent
+from ai_financial.agents.predictive.forecasting_agent import ForecastingAgent
+from ai_financial.agents.monitoring.alert_agent import AlertAgent
+from ai_financial.agents.reporting.reporting_agent import ReportingAgent
+from ai_financial.agents.processing.ocr_agent import OCRAgent
+from ai_financial.agents.processing.data_sync_agent import DataSyncAgent
+from ai_financial.agents.processing.reconciliation_agent import ReconciliationAgent
 from ai_financial.mcp.tools.financial_tools import (
     FinancialRatioTool,
     CashFlowAnalysisTool,
@@ -42,10 +48,36 @@ async def lifespan(app: FastAPI):
     
     # Register agents
     try:
+        # Advisory Agents
         ai_cfo = AICFOAgent(industry="general")
         orchestrator.register_agent(ai_cfo)
+        
+        # Predictive Agents
+        forecasting_agent = ForecastingAgent(industry="general")
+        orchestrator.register_agent(forecasting_agent)
+        
+        # Monitoring Agents
+        alert_agent = AlertAgent(industry="general")
+        orchestrator.register_agent(alert_agent)
+        
+        # Reporting Agents
+        reporting_agent = ReportingAgent(industry="general")
+        orchestrator.register_agent(reporting_agent)
+        
+        # Processing Agents
+        ocr_agent = OCRAgent(industry="general")
+        orchestrator.register_agent(ocr_agent)
+        
+        data_sync_agent = DataSyncAgent(industry="general")
+        orchestrator.register_agent(data_sync_agent)
+        
+        reconciliation_agent = ReconciliationAgent(industry="general")
+        orchestrator.register_agent(reconciliation_agent)
+        
+        logger.info("All agents registered successfully")
+        
     except Exception as e:
-        logger.warning(f"Failed to register AI CFO agent: {e}")
+        logger.warning(f"Failed to register some agents: {e}")
     
     # Register tools
     try:
@@ -143,6 +175,140 @@ async def invoke_agent(
         
     except Exception as e:
         logger.error(f"Agent invocation failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/v1/intelligent/route")
+async def intelligent_route(request: dict):
+    """Intelligent routing - automatically determine best agent or workflow."""
+    orchestrator = get_orchestrator()
+    
+    try:
+        # Extract message and context from request
+        message = request.get("message", "")
+        context_data = request.get("context", {})
+        
+        # Create enhanced request with context
+        enhanced_request = {
+            "message": message,
+            "context": context_data
+        }
+        
+        # Use intelligent routing (no preferred_agent or workflow_type)
+        result = await orchestrator.route_request(
+            request=enhanced_request,
+            # No preferred_agent or workflow_type - triggers intelligent routing
+        )
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"Intelligent routing failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/v1/intelligent/stream")
+async def stream_intelligent_route(
+    message: str = "Analyze our financial situation",
+):
+    """Stream intelligent routing execution for real-time updates."""
+    orchestrator = get_orchestrator()
+    
+    async def generate_stream():
+        try:
+            # Create a simple request for streaming
+            request_data = {"message": message}
+            
+            # Stream the intelligent routing process
+            async for update in orchestrator.stream_intelligent_routing(request_data):
+                yield f"data: {update}\n\n"
+        except Exception as e:
+            logger.error(f"Intelligent routing streaming failed: {str(e)}")
+            yield f"data: {{'error': '{str(e)}'}}\n\n"
+    
+    return StreamingResponse(
+        generate_stream(),
+        media_type="text/plain",
+        headers={"Cache-Control": "no-cache"},
+    )
+
+
+@app.post("/api/v1/intelligent/analyze")
+async def analyze_routing(request: dict):
+    """Analyze what agent would be selected for a given request."""
+    orchestrator = get_orchestrator()
+    
+    try:
+        message = request.get("message", "")
+        
+        # Analyze the request to determine routing
+        request_str = str(message).lower()
+        
+        # Keyword-based analysis (same logic as in orchestrator)
+        routing_analysis = {
+            "input_message": message,
+            "analysis": {},
+            "recommended_agent": None,
+            "confidence": 0.0,
+            "keywords_found": []
+        }
+        
+        # Check for forecasting keywords
+        forecast_keywords = ["forecast", "predict", "projection", "trend", "future"]
+        if any(keyword in request_str for keyword in forecast_keywords):
+            routing_analysis["recommended_agent"] = "forecasting_agent"
+            routing_analysis["confidence"] = 0.9
+            routing_analysis["keywords_found"] = [kw for kw in forecast_keywords if kw in request_str]
+            routing_analysis["analysis"]["type"] = "forecasting"
+        
+        # Check for alert keywords
+        elif any(keyword in request_str for keyword in ["alert", "warning", "risk", "threshold", "monitor"]):
+            routing_analysis["recommended_agent"] = "alert_agent"
+            routing_analysis["confidence"] = 0.9
+            routing_analysis["keywords_found"] = [kw for kw in ["alert", "warning", "risk", "threshold", "monitor"] if kw in request_str]
+            routing_analysis["analysis"]["type"] = "monitoring"
+        
+        # Check for reporting keywords
+        elif any(keyword in request_str for keyword in ["report", "summary", "brief", "dashboard", "analysis"]):
+            routing_analysis["recommended_agent"] = "reporting_agent"
+            routing_analysis["confidence"] = 0.8
+            routing_analysis["keywords_found"] = [kw for kw in ["report", "summary", "brief", "dashboard", "analysis"] if kw in request_str]
+            routing_analysis["analysis"]["type"] = "reporting"
+        
+        # Check for OCR keywords
+        elif any(keyword in request_str for keyword in ["ocr", "scan", "receipt", "invoice", "document"]):
+            routing_analysis["recommended_agent"] = "ocr_agent"
+            routing_analysis["confidence"] = 0.9
+            routing_analysis["keywords_found"] = [kw for kw in ["ocr", "scan", "receipt", "invoice", "document"] if kw in request_str]
+            routing_analysis["analysis"]["type"] = "document_processing"
+        
+        # Check for data sync keywords
+        elif any(keyword in request_str for keyword in ["sync", "integration", "import", "export", "data"]):
+            routing_analysis["recommended_agent"] = "data_sync_agent"
+            routing_analysis["confidence"] = 0.8
+            routing_analysis["keywords_found"] = [kw for kw in ["sync", "integration", "import", "export", "data"] if kw in request_str]
+            routing_analysis["analysis"]["type"] = "data_management"
+        
+        # Check for reconciliation keywords
+        elif any(keyword in request_str for keyword in ["reconcile", "match", "balance", "statement"]):
+            routing_analysis["recommended_agent"] = "reconciliation_agent"
+            routing_analysis["confidence"] = 0.9
+            routing_analysis["keywords_found"] = [kw for kw in ["reconcile", "match", "balance", "statement"] if kw in request_str]
+            routing_analysis["analysis"]["type"] = "reconciliation"
+        
+        # Default to AI CFO
+        else:
+            routing_analysis["recommended_agent"] = "ai_cfo_agent"
+            routing_analysis["confidence"] = 0.7
+            routing_analysis["analysis"]["type"] = "general_financial"
+            routing_analysis["analysis"]["reason"] = "No specific keywords found, defaulting to AI CFO for general financial queries"
+        
+        routing_analysis["available_agents"] = list(orchestrator.agents.keys())
+        
+        return routing_analysis
+        
+    except Exception as e:
+        logger.error(f"Routing analysis failed: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
